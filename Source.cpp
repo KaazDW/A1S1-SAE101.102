@@ -4,18 +4,34 @@
 #include "config_sdl.h"
 using namespace std;
 
-const int TAILLE_TAB = 6;
-int bambou_taille[TAILLE_TAB] = { 2, 4, 1, 8, 12, 0 };
 
 
-void TailleMax(int &premier_plus_grand_ind, int &deuxieme_plus_grand_ind) {
+struct Bambou
+{
+	int num;
+	int taille;
+	int croissance;
 
-	int max = bambou_taille[0];
+};
+
+
+void InitTab(Bambou tab[], int taille) {
+
+	for (int i = 0; i < taille; i++) {
+		tab[i].num = i;
+		tab[i].taille = rand() % 15;
+		tab[i].croissance = rand() % 20;
+	}
+}
+
+
+void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxieme_plus_grand_ind) {
+
+	int max = tab[0].taille;
 	int imax = 0;
 
-	for (int i = 0; i < TAILLE_TAB; i++) {
-		if (max < bambou_taille[i]) {
-			max = bambou_taille[i];
+	for (int i = 0; i < taille; i++) {
+		if (max < tab[i].taille) {
 			imax = i;
 		}
 	}
@@ -23,30 +39,45 @@ void TailleMax(int &premier_plus_grand_ind, int &deuxieme_plus_grand_ind) {
 	premier_plus_grand_ind = imax;
 	
 	if (imax != 0) {
-		int tmp = bambou_taille[imax];
-		bambou_taille[imax] = bambou_taille[0];
-		bambou_taille[0] = tmp;
+		Bambou tmp = tab[imax];
+		tab[imax] = tab[0];
+		tab[0] = tmp;
 	}
 	
-	max = bambou_taille[1];
+	max = tab[1].taille;
 	
-	for (int i = 1; i < TAILLE_TAB; i++) {
-		if (max < bambou_taille[i]) {
-			max = bambou_taille[i];
+	for (int i = 1; i < taille; i++) {
+		if (max < tab[i].taille) {
 			imax = i;
 		}
 	}
 
 	deuxieme_plus_grand_ind = imax;
+
+	Bambou tmp = tab[premier_plus_grand_ind];
+	tab[premier_plus_grand_ind] = tab[0];
+	tab[0] = tmp;
 }
 
 
 int main(int argc, char* argv[]) {
 	
-	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
-	TailleMax(indice_premier_plus_grand, indice_deuxieme_plus_grand);
+	// Déclaration tableau et constante
+	const int TAILLE = 12;
+	Bambou jardin[TAILLE];
 
-	cout << indice_premier_plus_grand << " --- " << indice_deuxieme_plus_grand;
+	// Initialisation du tableau jardin
+	InitTab(jardin, TAILLE);
+
+	for (int i = 0; i < TAILLE; i++) {
+		cout << jardin[i].taille << " ";
+	}
+
+	// Appel fo,ction TailleMax qui renvoie les indices du premier t esnuite du deuxieme plus grand arbre
+	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
+	TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+
+	cout << " --- " << indice_premier_plus_grand << " --- " << indice_deuxieme_plus_grand;
 
 	return 0;
 }
