@@ -11,7 +11,6 @@ struct Bambou
 	int num;
 	int taille;
 	int croissance;
-
 };
 
 
@@ -32,6 +31,7 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 
 	for (int i = 0; i < taille; i++) {
 		if (max < tab[i].taille) {
+			max = tab[i].taille;
 			imax = i;
 		}
 	}
@@ -48,6 +48,7 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 	
 	for (int i = 1; i < taille; i++) {
 		if (max < tab[i].taille) {
+			max = tab[i].taille;
 			imax = i;
 		}
 	}
@@ -69,15 +70,13 @@ int main(int argc, char* argv[]) {
 	// Initialisation du tableau jardin
 	InitTab(jardin, TAILLE);
 
-	for (int i = 0; i < TAILLE; i++) {
-		cout << jardin[i].taille << " ";
-	}
-
-	// Appel fo,ction TailleMax qui renvoie les indices du premier t esnuite du deuxieme plus grand arbre
+	// Appel fonction TailleMax qui renvoie les indices du premier et esnuite du deuxieme plus grand arbre
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
 	TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
-	cout << " --- " << indice_premier_plus_grand << " --- " << indice_deuxieme_plus_grand;
+	cout << "Indice du plus 1er plus grand bambou : " << indice_premier_plus_grand << endl;
+	cout << "Indice du plus 2eme plus grand bambou : " << indice_deuxieme_plus_grand << endl;
+
 
 	return 0;
 }
