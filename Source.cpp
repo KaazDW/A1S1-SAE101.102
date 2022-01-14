@@ -7,7 +7,3 @@ using namespace std;
 int main(int argc, char* argv[]) {
 	//tentative de push 
 	//commentaire
-	// Mathias test
-	//dev
-	return 0;
-}
