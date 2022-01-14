@@ -27,3 +27,27 @@ struct RobotPanda {
 };
 
 
+struct Bambou
+{
+	int num;
+	int taille;
+	int croissance;
+
+};
+
+
+void InitTab(Bambou tab[], int taille) {
+
+	for (int i = 0; i < taille; i++) {
+		tab[i].num = i;
+		tab[i].taille = rand() % 15;
+		tab[i].croissance = rand() % 20;
+	}
+}
+
+
+void TailleMoy(Bambou tab[], int taille) {
+	tab[i].taille;
+
+}
+
