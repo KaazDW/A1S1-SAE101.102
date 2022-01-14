@@ -4,7 +4,13 @@
 #include "config_sdl.h"
 using namespace std;
 
-
+struct Statistique {
+	int Jour;
+	int TailleMax1;
+	int TailleMax2;
+	int TailleMoy;
+	int TailleMin;
+};
 
 struct Bambou
 {
@@ -60,6 +66,15 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 	tab[0] = tmp;
 }
 
+float TailleMoyenne(Bambou tab[], int Taille) {
+	float somme = 0.0, cpt = 0.0;
+	for (int i = 0; i < Taille; i++) {
+		somme = somme + tab[i].taille;
+		cpt++;
+	}
+	float moyenne = somme / cpt;
+	return moyenne;
+}
 
 int main(int argc, char* argv[]) {
 	
@@ -70,12 +85,14 @@ int main(int argc, char* argv[]) {
 	// Initialisation du tableau jardin
 	InitTab(jardin, TAILLE);
 
-	// Appel fonction TailleMax qui renvoie les indices du premier et esnuite du deuxieme plus grand arbre
+	// Appel fonction TailleMax qui renvoie les indices du premier et ensuire du deuxieme plus grand arbre
+	// Faudra appeler cette fonction dans une future fonction qui mettra ces valeurs dans une structure statistique comme définit plus haut
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
 	TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
-	cout << "Indice du plus 1er plus grand bambou : " << indice_premier_plus_grand << endl;
-	cout << "Indice du plus 2eme plus grand bambou : " << indice_deuxieme_plus_grand << endl;
+	// Moyenne des Bambous. Faudra faire pareil que pour la fonction d'avant
+	float moyenne = TailleMoyenne(jardin, TAILLE);
+	cout << "Moyenne de la taille des bambous: " << moyenne << endl;
 
 
 	return 0;
