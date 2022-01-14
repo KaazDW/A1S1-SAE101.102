@@ -12,7 +12,8 @@ int main() {
 
 struct Taille{
 	int Jour;
-	int TailleMax;
+	int TailleMax1;
+	int TailleMax2;
 	int TailleMoy;
 	int TailleMin;
 }
