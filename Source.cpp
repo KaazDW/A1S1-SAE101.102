@@ -143,8 +143,9 @@ void ReduceMax(Bambou tab[], int taille, Robot &panda1, Robot &panda2) {
 	}
 }
 
+// A faire plus tard, c'est plus compliqué à faire que ReduceMax
 /*
-void ReduceFastest(Bambou tab[], int taille) {
+void ReduceFast(Bambou tab[], int taille) {
 
 	int somme_croissance_bambou = 0;
 
@@ -155,20 +156,9 @@ void ReduceFastest(Bambou tab[], int taille) {
 	float x = 1 + sqrt(5);
 	float taille_minimale = x * somme_croissance_bambou;
 
-	bool taille_sup[12];
+	int indice_croissance1, indice_croissance2;
+	int max1, max2;
 
-	for (int i = 0; i < taille; i++) {
-		if (tab[i].taille >= taille_minimale)
-			taille_sup[i] = true;
-		else
-			taille_sup[i] = false;
-	}
-
-	int indice_premier_plus_vite = 0, indice_deuxieme_plus_vite = 0;
-	int max_premier, max_deuxieme;
-	int tmp_indice, tmp_max;
-
-	
 
 }
 */
