@@ -23,7 +23,7 @@ struct Bambou
 
 
 struct Robot {
-	int position;
+	bool position[12] = { 0 };
 	int batterie;
 };
 
@@ -40,7 +40,7 @@ void InitTab(Bambou tab[], int taille) {
 
 void InitRobot(Robot& panda) {
 	panda.batterie = 7;
-	panda.position = 11;
+	panda.position[11] = 1;
 }
 
 
@@ -78,7 +78,7 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 		tab[imax] = tab[0];
 		tab[0] = tmp;
 	}
-	
+
 	max = tab[1].taille;
 	
 	for (int i = 1; i < taille; i++) {
@@ -90,9 +90,11 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 
 	deuxieme_plus_grand_ind = imax;
 
-	Bambou tmp = tab[premier_plus_grand_ind];
-	tab[premier_plus_grand_ind] = tab[0];
-	tab[0] = tmp;
+	if (premier_plus_grand_ind != 0) {
+		Bambou tmp = tab[premier_plus_grand_ind];
+		tab[premier_plus_grand_ind] = tab[0];
+		tab[0] = tmp;
+	}
 }
 
 
@@ -115,17 +117,16 @@ void croissance(Bambou tab[], int taille) {
 
 
 void deplacement(Robot &panda1, Robot &panda2, int indice_premier, int indice_deuxieme) {
-	panda1.position = indice_premier;
-	panda2.position = indice_deuxieme;
+	for (int i = 0; i < 12; i++) {
+		panda1.position[i] = false;
+		panda2.position[i] = false;
+	}
+	panda1.position[indice_premier] = true;
+	panda2.position[indice_deuxieme] = true;
 }
 
 
-void ReduceMax(Bambou tab[], int taille, Robot &panda1, Robot &panda2) {
-	int indice_premier = 0, indice_deuxieme = 0;
-	TailleMax(tab, taille, indice_premier, indice_deuxieme);
-
-	deplacement(panda1, panda2, indice_premier, indice_deuxieme);
-	
+void batterie_et_decoupe(Bambou tab[], Robot &panda1, Robot &panda2, int indice_premier, int indice_deuxieme) {
 	if (panda1.batterie > 0) {
 		tab[indice_premier].taille = 0;
 		panda1.batterie -= 1;
@@ -135,7 +136,7 @@ void ReduceMax(Bambou tab[], int taille, Robot &panda1, Robot &panda2) {
 	}
 
 	if (panda2.batterie > 0) {
-		tab[indice_deuxieme].taille = 0;		
+		tab[indice_deuxieme].taille = 0;
 		panda2.batterie -= 1;
 	}
 	else {
@@ -143,9 +144,18 @@ void ReduceMax(Bambou tab[], int taille, Robot &panda1, Robot &panda2) {
 	}
 }
 
-// A faire plus tard, c'est plus compliqué à faire que ReduceMax
-/*
-void ReduceFast(Bambou tab[], int taille) {
+
+void ReduceMax(Bambou tab[], int taille, Robot &panda1, Robot &panda2) {
+	int indice_premier = 0, indice_deuxieme = 0;
+	TailleMax(tab, taille, indice_premier, indice_deuxieme);
+
+	deplacement(panda1, panda2, indice_premier, indice_deuxieme);
+	
+	batterie_et_decoupe(tab, panda1, panda2, indice_premier, indice_deuxieme);
+}
+
+
+void ReduceFast(Bambou tab[], int taille, Robot &panda1, Robot &panda2) {
 
 	int somme_croissance_bambou = 0;
 
@@ -159,9 +169,43 @@ void ReduceFast(Bambou tab[], int taille) {
 	int indice_croissance1, indice_croissance2;
 	int max1, max2;
 
+	max1 = tab[0].croissance;
+	indice_croissance1 = 0;
 
+	for (int i = 0; i < taille; i++) {
+		if (tab[i].taille > taille_minimale && max1 <= tab[i].croissance) {
+			max1 = tab[i].croissance;
+			indice_croissance1 = i;
+		}
+	}
+	if (indice_croissance1 != 0) {
+		Bambou tmp = tab[indice_croissance1];
+		tab[indice_croissance1] = tab[0];
+		tab[0] = tmp;
+	}
+
+	max2 = tab[1].croissance;
+	indice_croissance2 = 1;
+
+	for (int i = 1; i < taille; i++) {
+		if (tab[i].taille > taille_minimale && max2 <= tab[i].croissance) {
+			max2 = tab[i].croissance;
+			indice_croissance2 = i;
+		}
+	}
+
+	if (indice_croissance1 != 0) {
+		Bambou tmp = tab[indice_croissance1];
+		tab[indice_croissance1] = tab[0];
+		tab[0] = tmp;
+	}
+	
+	if (tab[indice_croissance1].taille > taille_minimale && tab[indice_croissance2].taille > taille_minimale) {
+		deplacement(panda1, panda2, indice_croissance1, indice_croissance2);
+		batterie_et_decoupe(tab, panda1, panda2, indice_croissance1, indice_croissance2);
+	}
 }
-*/
+
 
 int main(int argc, char* argv[]) {
 	
@@ -193,13 +237,39 @@ int main(int argc, char* argv[]) {
 	InitRobot(panda1);
 	InitRobot(panda2);
 
+	/*
 	ReduceMax(jardin, TAILLE, panda1, panda2);
-	cout << "position panda1 : " << panda1.position << endl;
-	cout << "position panda2 : " << panda2.position << endl;
+	for (int i = 0; i < TAILLE; i++) {
+		if (panda1.position[i] == true)
+			cout << "position panda1 : " << i << endl;
+		if (panda2.position[i] == true)
+			cout << "position panda2 : " << i << endl;
+	}
+	
 	cout << "Battrie panda1 : " << panda1.batterie << endl;
 	cout << "Battrie panda2 : " << panda2.batterie << endl;
+	*/
 
+	// Test ReduceFast
+	/*
+	for (int i = 0; i < 30; i++) {
+		afficheTab(jardin, TAILLE);
+		croissance(jardin, TAILLE);
+		ReduceFast(jardin, TAILLE, panda1, panda2);
 
+		afficheTab(jardin, TAILLE);
+
+		for (int i = 0; i < TAILLE; i++) {
+			if (panda1.position[i] == true)
+				cout << "position panda1 : " << i << endl;
+			if (panda2.position[i] == true)
+				cout << "position panda2 : " << i << endl;
+		}
+
+		cout << "Batterie panda1 : " << panda1.batterie << endl;
+		cout << "Batterie panda2 : " << panda2.batterie << endl;
+	}
+	*/
 
 	return 0;
 }
