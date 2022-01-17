@@ -278,9 +278,8 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 	SDL_SetRenderDrawColor(rendu, 255, 215, 0, 255);	
 	SDL_RenderDrawLine(rendu, 70, 820, 850, 820);
 	SDL_RenderPresent(rendu);
-
-
 }
+
 
 void affiche(SDL_Renderer* rendu) {
 	ActivStartMenu = false;
@@ -405,6 +404,28 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 }
 
 
+void bambous_tracer(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
+	
+	SDL_Rect rectangle_inferieur;
+	SDL_Rect rectangle_superieur;
+
+	rectangle_inferieur.w = 8;
+	rectangle_inferieur.h = 2;
+
+	rectangle_superieur.w = 10;
+	rectangle_superieur.h = 1;
+	
+	for (int i = 0; i < taille_jardin; i++) {
+		rectangle_inferieur.x = 70 * 
+		for (int j = 0; j < jardin[i].taille; j++) {
+			SDL_SetRenderDrawColor(rendu, 69, 224, 11, 255); // couleur verte
+			SDL_RenderFillRect(rendu, &rectangle);
+		}
+	}
+
+}
+
+
 int main(int argc, char* argv[]) {
 
 	// Declaration tableau et constante
@@ -424,7 +445,7 @@ int main(int argc, char* argv[]) {
 	InitRobot(panda1);
 	InitRobot(panda2);
 
-	/*
+	
 	bool simulation = true;
 	char choix_suite, mode;
 
@@ -460,7 +481,7 @@ int main(int argc, char* argv[]) {
 			cout << endl;
 		}
 	}
-
+	/*
 	else if (mode == 'f') {
 
 		while (simulation) {
