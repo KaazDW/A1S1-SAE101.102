@@ -274,6 +274,13 @@ SDL_Rect rectborduredroite;
 
 bool ActivStartMenu = false;
 
+void affiche_terre_bambou(SDL_Renderer* rendu) {
+	SDL_SetRenderDrawColor(rendu, 255, 215, 0, 255);	
+	SDL_RenderDrawLine(rendu, 70, 820, 850, 820);
+	SDL_RenderPresent(rendu);
+
+
+}
 
 void affiche(SDL_Renderer* rendu) {
 	ActivStartMenu = false;
@@ -287,7 +294,7 @@ void affiche(SDL_Renderer* rendu) {
 	SDL_RenderFillRect(rendu, &rectarriereplan);
 
 	SDL_Rect rectfond;
-	rectfond.w = LargeurFenetre - 350;
+	rectfond.w = LargeurFenetre - 750;
 	rectfond.h = HauteurFenetre - 50;
 	rectfond.y = 25;
 	rectfond.x = 25;
@@ -295,6 +302,13 @@ void affiche(SDL_Renderer* rendu) {
 	SDL_RenderFillRect(rendu, &rectfond);
 
 	SDL_Rect rect;
+	rect.w = LargeurFenetre - 1245;
+	rect.h = HauteurFenetre - 50;
+	rect.y = 25;
+	rect.x = 930;
+	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
+	SDL_RenderFillRect(rendu, &rect);
+
 	rect.w = 280;
 	rect.h = HauteurFenetre - 50;
 	rect.y = 25;
@@ -308,7 +322,11 @@ void affiche(SDL_Renderer* rendu) {
 	returnmenu_button.x = LargeurFenetre - 285;
 	SDL_SetRenderDrawColor(rendu, 0, 15, 15, 255);
 	SDL_RenderFillRect(rendu, &returnmenu_button);
-/*
+
+
+	affiche_terre_bambou(rendu);
+
+	/*
 	TTF_Init();
 	TTF_Font* font = NULL;
 	font = TTF_OpenFont("ARLRDBD.ttf", 12);
