@@ -2,29 +2,33 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "config_sdl.h"
-
 using namespace std;
+
+
+struct Statistique {
+	int Jour;
+	int ind_TailleMax1;
+	int ind_TailleMax2;
+	int val_TailleMax1;
+	int val_TailleMax2;
+	float TailleMoy;
+	int TailleMin;
+};
+
 
 struct Bambou
 {
 	int num;
 	int taille;
 	int croissance;
-
 };
+
 
 struct Robot {
 	bool position[12] = { 0 };
 	int batterie;
 };
 
-struct Statistique {
-	int Jour;
-	int TailleMax1;
-	int TailleMax2;
-	int TailleMoy;
-	int TailleMin;
-};
 
 void InitTab(Bambou tab[], int taille) {
 
@@ -34,6 +38,7 @@ void InitTab(Bambou tab[], int taille) {
 		tab[i].croissance = 1 + rand() % 20;
 	}
 }
+
 
 void InitRobot(Robot& panda) {
 	panda.batterie = 7;
@@ -70,11 +75,10 @@ void TailleMax(Bambou tab[], int taille, int& premier_plus_grand_ind, int& deuxi
 
 	premier_plus_grand_ind = imax;
 
-	if (imax != 0) {
-		Bambou tmp = tab[imax];
-		tab[imax] = tab[0];
-		tab[0] = tmp;
-	}
+
+	Bambou tmp = tab[imax];
+	tab[imax] = tab[0];
+	tab[0] = tmp;
 
 	max = tab[1].taille;
 
@@ -85,16 +89,14 @@ void TailleMax(Bambou tab[], int taille, int& premier_plus_grand_ind, int& deuxi
 		}
 	}
 
-	deuxieme_plus_grand_ind = imax;
+	if (premier_plus_grand_ind == imax)
+		deuxieme_plus_grand_ind = 0;
+	else
+		deuxieme_plus_grand_ind = imax;
 
-	if (premier_plus_grand_ind != 0) {
-		Bambou tmp = tab[premier_plus_grand_ind];
-		tab[premier_plus_grand_ind] = tab[0];
-		tab[0] = tmp;
-	}
-}
-
-int TailleMin(Bambou tab[], int taille) {
+	tmp = tab[premier_plus_grand_ind];
+	tab[premier_plus_grand_ind] = tab[0];
+	tab[0] = tmp;
 
 }
 
@@ -207,6 +209,7 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 	}
 }
 
+
 int main(int argc, char* argv[]) {
 
 	// Déclaration tableau et constante
@@ -214,67 +217,68 @@ int main(int argc, char* argv[]) {
 	const int TAILLE_STATS = 101;
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
-	int cpt_jour = 1;
+	int cpt_jour = 0;
 
 	// Initialisation du tableau jardin
 	InitTab(jardin, TAILLE);
 
-	// Appel fonction TailleMax qui renvoie les indices du premier et ensuire du deuxieme plus grand arbre
-	// Faudra appeler cette fonction dans une future fonction qui mettra ces valeurs dans une structure statistique comme définit plus haut
+	// Initialisation des indices qui nous seront utiles après appels de fonctions.
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
-	TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
-	jardin[indice_premier_plus_grand].taille = RecupStats[cpt_jour].TailleMax1;
-	jardin[indice_deuxieme_plus_grand].taille = RecupStats[cpt_jour].TailleMax2;
 
-	// Moyenne des Bambous. Faudra faire pareil que pour la fonction d'avant
-	float moyenne = TailleMoyenne(jardin, TAILLE);
-	RecupStats[cpt_jour].TailleMoy = moyenne;
-	cout << "Moyenne de la taille des bambous: " << moyenne << endl;
-
-	// Test croissance
-	/*
-	afficheTab(jardin, TAILLE);
-	croissance(jardin, TAILLE);
-	afficheTab(jardin, TAILLE);
-	*/
-
-	// Test ReduceMax
 	Robot panda1, panda2;
 	InitRobot(panda1);
 	InitRobot(panda2);
 
-	/*
-	ReduceMax(jardin, TAILLE, panda1, panda2);
-	for (int i = 0; i < TAILLE; i++) {
-		if (panda1.position[i] == true)
-			cout << "position panda1 : " << i << endl;
-		if (panda2.position[i] == true)
-			cout << "position panda2 : " << i << endl;
-	}
 
-	cout << "Battrie panda1 : " << panda1.batterie << endl;
-	cout << "Battrie panda2 : " << panda2.batterie << endl;
-	*/
+	bool simulation = true;
+	char continuer = ' ';
 
-	// Test ReduceFast
-	/*
-	for (int i = 0; i < 30; i++) {
-		afficheTab(jardin, TAILLE);
-		croissance(jardin, TAILLE);
-		ReduceFast(jardin, TAILLE, panda1, panda2);
-		afficheTab(jardin, TAILLE);
-		for (int i = 0; i < TAILLE; i++) {
-			if (panda1.position[i] == true)
-				cout << "position panda1 : " << i << endl;
-			if (panda2.position[i] == true)
-				cout << "position panda2 : " << i << endl;
+	while (simulation) {
+		cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
+		cin >> continuer;
+
+		if (continuer == 'q') {
+			cout << "Fin." << endl;
+			simulation = false;
 		}
-		cout << "Batterie panda1 : " << panda1.batterie << endl;
-		cout << "Batterie panda2 : " << panda2.batterie << endl;
-	}
-	*/
 
-	RecupStats[cpt_jour].Jour = cpt_jour;
+		else if (continuer == 'r') {
+
+			RecupStats[cpt_jour].Jour = cpt_jour;
+
+			TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+
+			RecupStats[cpt_jour].val_TailleMax1 = jardin[indice_premier_plus_grand].taille;
+			RecupStats[cpt_jour].val_TailleMax2 = jardin[indice_deuxieme_plus_grand].taille;
+			RecupStats[cpt_jour].ind_TailleMax1 = indice_premier_plus_grand;
+			RecupStats[cpt_jour].ind_TailleMax2 = indice_deuxieme_plus_grand;
+
+			cout << "Jour numero : " << RecupStats[cpt_jour].Jour << endl;
+			cout << "-----------------" << endl;
+			cout << "Indice du premier plus grand : " << indice_premier_plus_grand << endl;
+			cout << "Valeur du premier plus grand : " << jardin[indice_premier_plus_grand].taille << endl;
+			cout << "-----------------" << endl;
+			cout << "Indice du deuxieme plus grand : " << indice_deuxieme_plus_grand << endl;
+			cout << "Valeur du deuxieme plus grand : " << jardin[indice_deuxieme_plus_grand].taille << endl;
+			cout << "-----------------" << endl;
+
+			float moyenne = TailleMoyenne(jardin, TAILLE);
+
+			RecupStats[cpt_jour].TailleMoy = moyenne;
+			cout << "Moyenne de taille des bambous : " << moyenne << endl;
+
+			cpt_jour++;
+
+			ReduceMax(jardin, TAILLE, panda1, panda2);
+			afficheTab(jardin, TAILLE);
+			croissance(jardin, TAILLE);
+			afficheTab(jardin, TAILLE);
+			cout << "Batterie panda1 : " << panda1.batterie << endl;
+			cout << "Batterie panda2 : " << panda2.batterie << endl;
+		}
+		cout << endl;
+	}
+
 
 	return 0;
 }
