@@ -87,9 +87,8 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 		}
 	}
 	
-	if (premier_plus_grand_ind == imax) {
+	if (premier_plus_grand_ind == imax)
 		deuxieme_plus_grand_ind = 0;
-	}
 	else
 		deuxieme_plus_grand_ind = imax;
 
