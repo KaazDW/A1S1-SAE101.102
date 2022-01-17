@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "config_sdl.h"
@@ -113,9 +114,9 @@ float TailleMoyenne(Bambou tab[], int Taille) {
 
 
 void croissance(Bambou tab[], int taille) {
-	for (int i = 0; i < taille; i++) {
-		tab[i].taille += tab[i].croissance;
-	}
+for (int i = 0; i < taille; i++) {
+	tab[i].taille += tab[i].croissance;
+}
 }
 
 
@@ -209,6 +210,83 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 	}
 }
 
+void Sauvegarde_Jardin_Jour_Robot(Bambou tab[], Robot& panda1, Robot& panda2 ,int taille, int cpt_jour) {
+	ofstream sortie("jardin.txt", ios::trunc);
+
+	for (int i = 0; i < taille; i++){
+		sortie << tab[i].num <<',';
+		sortie << tab[i].taille <<',';
+		sortie << tab[i].croissance << endl;
+	}
+
+	for (int j = 0; j < taille; j++) {
+		if (panda1.position[j] == true) {
+			sortie << panda1.batterie << ',';
+			sortie << j << endl;
+		}
+		if (panda2.position[j] == true) {
+			sortie << panda2.batterie << ',';
+			sortie << j << endl;
+		}
+	}
+
+	sortie << cpt_jour << endl;
+	
+	sortie.close();
+}
+
+void Recharge_Sauvegarde_Jardin_Jour_Robot(Bambou tab[], Robot& panda1, Robot& panda2, int taille_tab, int& cpt_jour) {
+
+	ifstream entree("jardin.txt", ios::in);//declaration du flot 
+	if (!entree) //si le flot vaut false
+		cout << "Probleme d'ouverture " << endl;
+	else {
+		//lecture du fichier ici (cf. ci-dessous)
+
+		int i = 0;
+		for (; i < taille_tab; i++) {
+			char c_num[100], c_taille[100], c_croissance[100];
+			entree.getline(c_num, 100, ',');
+			entree.getline(c_taille, 100, ',');
+			entree.getline(c_croissance, 100);
+
+			int Num = atoi(c_num);
+			int Taille = atoi(c_taille);
+			int Croissance = atoi(c_croissance);
+
+			tab[i].num = Num;
+			tab[i].taille = Taille;
+			tab[i].croissance = Croissance;
+		}
+
+		char batterie[100], position[100];
+		entree.getline(batterie, 100, ',');
+		entree.getline(position, 100);
+
+		int bat = atoi(batterie);
+		int pos = atoi(position);
+
+		panda1.batterie = bat;
+		panda1.position[pos] = 1;
+
+		entree.getline(batterie, 100, ',');
+		entree.getline(position, 100);
+
+		bat = atoi(batterie);
+		pos = atoi(position);
+
+		panda2.batterie = bat;
+		panda2.position[pos] = 1;
+
+		char jour[100];
+		entree.getline(jour, 100);
+		cpt_jour = atoi(jour);
+
+		entree.close();
+	}
+
+}
+
 
 int main(int argc, char* argv[]) {
 
@@ -220,15 +298,22 @@ int main(int argc, char* argv[]) {
 	int cpt_jour = 0;
 
 	// Initialisation du tableau jardin
-	InitTab(jardin, TAILLE);
+
 
 	// Initialisation des indices qui nous seront utiles après appels de fonctions.
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
 
 	Robot panda1, panda2;
-	InitRobot(panda1);
-	InitRobot(panda2);
 
+	ifstream entree("jardin.txt", ios::in);
+	if (!entree) {
+		InitTab(jardin, TAILLE);
+		InitRobot(panda1);
+		InitRobot(panda2);
+	}
+	else {
+		Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+	}
 
 	bool simulation = true;
 	char continuer = ' ';
@@ -240,6 +325,8 @@ int main(int argc, char* argv[]) {
 		if (continuer == 'q') {
 			cout << "Fin." << endl;
 			simulation = false;
+
+			Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 		}
 
 		else if (continuer == 'r') {
