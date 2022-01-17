@@ -228,7 +228,7 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 }
 
 
-void InitStats(Statistique tab[], int taille, int &cpt_jour, Bambou tab_jardin[], int taille_jardin, int indice_premier_plus_grand, int indice_deuxieme_plus_grand) {
+void InitStats(Statistique tab[], int taille, int cpt_jour, Bambou tab_jardin[], int taille_jardin, int &indice_premier_plus_grand, int &indice_deuxieme_plus_grand) {
 
 	tab[cpt_jour].Jour = cpt_jour;
 
@@ -243,9 +243,22 @@ void InitStats(Statistique tab[], int taille, int &cpt_jour, Bambou tab_jardin[]
 
 	tab[cpt_jour].TailleMoy = moyenne;
 
+	int minimum = TailleMin(tab_jardin, taille_jardin);
+
+	tab[cpt_jour].TailleMin = minimum;
+}
 
 
+void afficheStats(Statistique tab[], int jour, int indice_premier_plus_grand, int indice_deuxieme_plus_grand) {
 
+	cout << "Jour numero : " << tab[jour].Jour << endl;
+	cout << "-----------------" << endl;
+	cout << "Indice du premier plus grand : " << tab[jour].ind_TailleMax1 << endl;
+	cout << "Valeur du premier plus grand : " << tab[jour].val_TailleMax1 << endl;
+	cout << "-----------------" << endl;
+	cout << "Indice du deuxieme plus grand : " << tab[jour].ind_TailleMax2 << endl;
+	cout << "Valeur du deuxieme plus grand : " << tab[jour].val_TailleMax2 << endl;
+	cout << "-----------------" << endl;
 }
 
 
@@ -290,33 +303,8 @@ int main(int argc, char* argv[]) {
 
 			else if (continuer == 'r') {
 
-				RecupStats[cpt_jour].Jour = cpt_jour;
-
-				TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
-
-				RecupStats[cpt_jour].val_TailleMax1 = jardin[indice_premier_plus_grand].taille;
-				RecupStats[cpt_jour].val_TailleMax2 = jardin[indice_deuxieme_plus_grand].taille;
-				RecupStats[cpt_jour].ind_TailleMax1 = indice_premier_plus_grand;
-				RecupStats[cpt_jour].ind_TailleMax2 = indice_deuxieme_plus_grand;
-
-				cout << "Jour numero : " << RecupStats[cpt_jour].Jour << endl;
-				cout << "-----------------" << endl;
-				cout << "Indice du premier plus grand : " << indice_premier_plus_grand << endl;
-				cout << "Valeur du premier plus grand : " << jardin[indice_premier_plus_grand].taille << endl;
-				cout << "-----------------" << endl;
-				cout << "Indice du deuxieme plus grand : " << indice_deuxieme_plus_grand << endl;
-				cout << "Valeur du deuxieme plus grand : " << jardin[indice_deuxieme_plus_grand].taille << endl;
-				cout << "-----------------" << endl;
-
-				float moyenne = TailleMoyenne(jardin, TAILLE);
-
-				RecupStats[cpt_jour].TailleMoy = moyenne;
-				cout << "Moyenne de taille des bambous : " << moyenne << endl;
-
-				RecupStats[cpt_jour].TailleMin = 0;
-				cout << "Taille minimum des bambous : 0" << endl;
-
-				cpt_jour++;
+				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
 				croissance(jardin, TAILLE);
 				afficheTab(jardin, TAILLE);
@@ -324,6 +312,8 @@ int main(int argc, char* argv[]) {
 				afficheTab(jardin, TAILLE);
 				cout << "Batterie panda1 : " << panda1.batterie << endl;
 				cout << "Batterie panda2 : " << panda2.batterie << endl;
+
+				cpt_jour++;
 			}
 			cout << endl;
 		}
@@ -343,35 +333,8 @@ int main(int argc, char* argv[]) {
 
 			else if (continuer == 'r') {
 
-				RecupStats[cpt_jour].Jour = cpt_jour;
-
-				TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
-
-				RecupStats[cpt_jour].val_TailleMax1 = jardin[indice_premier_plus_grand].taille;
-				RecupStats[cpt_jour].val_TailleMax2 = jardin[indice_deuxieme_plus_grand].taille;
-				RecupStats[cpt_jour].ind_TailleMax1 = indice_premier_plus_grand;
-				RecupStats[cpt_jour].ind_TailleMax2 = indice_deuxieme_plus_grand;
-
-				cout << "Jour numero : " << RecupStats[cpt_jour].Jour << endl;
-				cout << "-----------------" << endl;
-				cout << "Indice du premier plus grand : " << indice_premier_plus_grand << endl;
-				cout << "Valeur du premier plus grand : " << jardin[indice_premier_plus_grand].taille << endl;
-				cout << "-----------------" << endl;
-				cout << "Indice du deuxieme plus grand : " << indice_deuxieme_plus_grand << endl;
-				cout << "Valeur du deuxieme plus grand : " << jardin[indice_deuxieme_plus_grand].taille << endl;
-				cout << "-----------------" << endl;
-
-				float moyenne = TailleMoyenne(jardin, TAILLE);
-
-				RecupStats[cpt_jour].TailleMoy = moyenne;
-				cout << "Moyenne de taille des bambous : " << moyenne << endl;
-
-				int minimum = TailleMin(jardin, TAILLE);
-
-				RecupStats[cpt_jour].TailleMin = minimum;
-				cout << "Taille Minimum des bambous : " << minimum << endl;
-
-				cpt_jour++;
+				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
 				croissance(jardin, TAILLE);
 				afficheTab(jardin, TAILLE);
@@ -379,6 +342,9 @@ int main(int argc, char* argv[]) {
 				afficheTab(jardin, TAILLE);
 				cout << "Batterie panda1 : " << panda1.batterie << endl;
 				cout << "Batterie panda2 : " << panda2.batterie << endl;
+
+				cpt_jour++;
+
 			}
 			cout << endl;
 		}
