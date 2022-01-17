@@ -61,6 +61,20 @@ void afficheTab(Bambou tab[], int taille) {
 }
 
 
+int TailleMin(Bambou tab[], int taille) {
+
+	int imin;
+	imin = 0;
+
+	for (int i = 0; i < taille; i++) {
+		if (tab[imin].taille > tab[i].taille) {
+			imin = i;
+		}
+	}
+	return imin;
+}
+
+
 void TailleMax(Bambou tab[], int taille, int& premier_plus_grand_ind, int& deuxieme_plus_grand_ind) {
 
 	int max = tab[0].taille;
@@ -214,6 +228,27 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 }
 
 
+void InitStats(Statistique tab[], int taille, int &cpt_jour, Bambou tab_jardin[], int taille_jardin, int indice_premier_plus_grand, int indice_deuxieme_plus_grand) {
+
+	tab[cpt_jour].Jour = cpt_jour;
+
+	TailleMax(tab_jardin, taille_jardin, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+
+	tab[cpt_jour].val_TailleMax1 = tab_jardin[indice_premier_plus_grand].taille;
+	tab[cpt_jour].val_TailleMax2 = tab_jardin[indice_deuxieme_plus_grand].taille;
+	tab[cpt_jour].ind_TailleMax1 = indice_premier_plus_grand;
+	tab[cpt_jour].ind_TailleMax2 = indice_deuxieme_plus_grand;
+
+	float moyenne = TailleMoyenne(tab_jardin, taille_jardin);
+
+	tab[cpt_jour].TailleMoy = moyenne;
+
+
+
+
+}
+
+
 int main(int argc, char* argv[]) {
 
 	// Declaration tableau et constante
@@ -278,6 +313,9 @@ int main(int argc, char* argv[]) {
 				RecupStats[cpt_jour].TailleMoy = moyenne;
 				cout << "Moyenne de taille des bambous : " << moyenne << endl;
 
+				RecupStats[cpt_jour].TailleMin = 0;
+				cout << "Taille minimum des bambous : 0" << endl;
+
 				cpt_jour++;
 
 				croissance(jardin, TAILLE);
@@ -328,6 +366,11 @@ int main(int argc, char* argv[]) {
 				RecupStats[cpt_jour].TailleMoy = moyenne;
 				cout << "Moyenne de taille des bambous : " << moyenne << endl;
 
+				int minimum = TailleMin(jardin, TAILLE);
+
+				RecupStats[cpt_jour].TailleMin = minimum;
+				cout << "Taille Minimum des bambous : " << minimum << endl;
+
 				cpt_jour++;
 
 				croissance(jardin, TAILLE);
@@ -340,8 +383,6 @@ int main(int argc, char* argv[]) {
 			cout << endl;
 		}
 	}
-
-
 
 	return 0;
 }
