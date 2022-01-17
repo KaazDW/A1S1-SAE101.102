@@ -94,6 +94,10 @@ void TailleMax(Bambou tab[], int taille, int& premier_plus_grand_ind, int& deuxi
 	}
 }
 
+int TailleMin(Bambou tab[], int taille) {
+
+}
+
 
 float TailleMoyenne(Bambou tab[], int Taille) {
 	float somme = 0.0, cpt = 0.0;
@@ -207,10 +211,10 @@ int main(int argc, char* argv[]) {
 
 	// Déclaration tableau et constante
 	const int TAILLE = 12;
-	const int TAILLE_STATS = 100;
+	const int TAILLE_STATS = 101;
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
-	int cpt = 0;
+	int cpt_jour = 1;
 
 	// Initialisation du tableau jardin
 	InitTab(jardin, TAILLE);
@@ -219,11 +223,12 @@ int main(int argc, char* argv[]) {
 	// Faudra appeler cette fonction dans une future fonction qui mettra ces valeurs dans une structure statistique comme définit plus haut
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
 	TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
-	jardin[indice_premier_plus_grand].taille = RecupStats[cpt].TailleMax1;
-	jardin[indice_deuxieme_plus_grand].taille = RecupStats[cpt].TailleMax2;
+	jardin[indice_premier_plus_grand].taille = RecupStats[cpt_jour].TailleMax1;
+	jardin[indice_deuxieme_plus_grand].taille = RecupStats[cpt_jour].TailleMax2;
 
 	// Moyenne des Bambous. Faudra faire pareil que pour la fonction d'avant
 	float moyenne = TailleMoyenne(jardin, TAILLE);
+	RecupStats[cpt_jour].TailleMoy = moyenne;
 	cout << "Moyenne de la taille des bambous: " << moyenne << endl;
 
 	// Test croissance
@@ -268,6 +273,8 @@ int main(int argc, char* argv[]) {
 		cout << "Batterie panda2 : " << panda2.batterie << endl;
 	}
 	*/
+
+	RecupStats[cpt_jour].Jour = cpt_jour;
 
 	return 0;
 }
