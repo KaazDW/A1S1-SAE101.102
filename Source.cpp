@@ -18,6 +18,14 @@ struct Robot {
 	int batterie;
 };
 
+struct Statistique {
+	int Jour;
+	int TailleMax1;
+	int TailleMax2;
+	int TailleMoy;
+	int TailleMin;
+};
+
 void InitTab(Bambou tab[], int taille) {
 
 	for (int i = 0; i < taille; i++) {
@@ -200,6 +208,8 @@ int main(int argc, char* argv[]) {
 	// Déclaration tableau et constante
 	const int TAILLE = 12;
 	Bambou jardin[TAILLE];
+	Statistique RecupStats[100];
+	int cpt = 0;
 
 	// Initialisation du tableau jardin
 	InitTab(jardin, TAILLE);
@@ -208,6 +218,8 @@ int main(int argc, char* argv[]) {
 	// Faudra appeler cette fonction dans une future fonction qui mettra ces valeurs dans une structure statistique comme définit plus haut
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
 	TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+	jardin[indice_premier_plus_grand].taille = RecupStats[cpt].TailleMax1;
+	jardin[indice_deuxieme_plus_grand].taille = RecupStats[cpt].TailleMax2;
 
 	// Moyenne des Bambous. Faudra faire pareil que pour la fonction d'avant
 	float moyenne = TailleMoyenne(jardin, TAILLE);
