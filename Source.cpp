@@ -73,12 +73,11 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 
 	premier_plus_grand_ind = imax;
 	
-	if (imax != 0) {
-		Bambou tmp = tab[imax];
-		tab[imax] = tab[0];
-		tab[0] = tmp;
-	}
-
+	
+	Bambou tmp = tab[imax];
+	tab[imax] = tab[0];
+	tab[0] = tmp;
+	
 	max = tab[1].taille;
 	
 	for (int i = 1; i < taille; i++) {
@@ -87,14 +86,21 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 			imax = i;
 		}
 	}
-
-	deuxieme_plus_grand_ind = imax;
-
-	if (premier_plus_grand_ind != 0) {
-		Bambou tmp = tab[premier_plus_grand_ind];
-		tab[premier_plus_grand_ind] = tab[0];
-		tab[0] = tmp;
+	
+	if (premier_plus_grand_ind == imax) {
+		deuxieme_plus_grand_ind = 0;
 	}
+	else
+		deuxieme_plus_grand_ind = imax;
+
+	tmp = tab[premier_plus_grand_ind];
+	tab[premier_plus_grand_ind] = tab[0];
+	tab[0] = tmp;
+
+
+	cout << "Le premier plus grand : " << premier_plus_grand_ind << endl;
+	cout << "Le deuxieme plus grand : " << deuxieme_plus_grand_ind << endl;
+
 }
 
 
@@ -270,6 +276,32 @@ int main(int argc, char* argv[]) {
 		cout << "Batterie panda2 : " << panda2.batterie << endl;
 	}
 	*/
+
+	bool simulation = true;
+	char continuer = ' ';
+
+	afficheTab(jardin, TAILLE);
+
+	while (simulation) {
+		cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
+		cin >> continuer;
+
+		if (continuer == 'q') {
+			cout << "Fin." << endl;
+			simulation = false;
+		}
+
+		else if (continuer == 'r') {
+			ReduceMax(jardin, TAILLE, panda1, panda2);
+			afficheTab(jardin, TAILLE);
+			croissance(jardin, TAILLE);
+			afficheTab(jardin, TAILLE);
+			cout << "Batterie panda1 : " << panda1.batterie << endl;
+			cout << "Batterie panda2 : " << panda2.batterie << endl;
+		}
+		cout << endl;
+	}
+
 
 	return 0;
 }
