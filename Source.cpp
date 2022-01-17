@@ -221,60 +221,13 @@ int main(int argc, char* argv[]) {
 	// Initialisation du tableau jardin
 	InitTab(jardin, TAILLE);
 
-	// Appel fonction TailleMax qui renvoie les indices du premier et ensuire du deuxieme plus grand arbre
-	// Faudra appeler cette fonction dans une future fonction qui mettra ces valeurs dans une structure statistique comme définit plus haut
+	// Initialisation des indices qui nous seront utiles après appels de fonctions.
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
-	TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
-	// Moyenne des Bambous. Faudra faire pareil que pour la fonction d'avant
-	float moyenne = TailleMoyenne(jardin, TAILLE);
-	cout << "Moyenne de la taille des bambous: " << moyenne << endl;
-
-	// Test croissance
-	/*
-	afficheTab(jardin, TAILLE);
-	croissance(jardin, TAILLE);
-	afficheTab(jardin, TAILLE);
-	*/
-
-	// Test ReduceMax
 	Robot panda1, panda2;
 	InitRobot(panda1);
 	InitRobot(panda2);
 
-	/*
-	ReduceMax(jardin, TAILLE, panda1, panda2);
-	for (int i = 0; i < TAILLE; i++) {
-		if (panda1.position[i] == true)
-			cout << "position panda1 : " << i << endl;
-		if (panda2.position[i] == true)
-			cout << "position panda2 : " << i << endl;
-	}
-	
-	cout << "Battrie panda1 : " << panda1.batterie << endl;
-	cout << "Battrie panda2 : " << panda2.batterie << endl;
-	*/
-
-	// Test ReduceFast
-	/*
-	for (int i = 0; i < 30; i++) {
-		afficheTab(jardin, TAILLE);
-		croissance(jardin, TAILLE);
-		ReduceFast(jardin, TAILLE, panda1, panda2);
-
-		afficheTab(jardin, TAILLE);
-
-		for (int i = 0; i < TAILLE; i++) {
-			if (panda1.position[i] == true)
-				cout << "position panda1 : " << i << endl;
-			if (panda2.position[i] == true)
-				cout << "position panda2 : " << i << endl;
-		}
-
-		cout << "Batterie panda1 : " << panda1.batterie << endl;
-		cout << "Batterie panda2 : " << panda2.batterie << endl;
-	}
-	*/
 
 	bool simulation = true;
 	char continuer = ' ';
