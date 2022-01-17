@@ -285,7 +285,6 @@ int main(int argc, char* argv[]) {
 	bool simulation = true;
 	char continuer, mode;
 
-	
 	cout << "Choix mode : 'f' pour Fast, 'm' pour Max." << endl;
 	cin >> mode;
 
