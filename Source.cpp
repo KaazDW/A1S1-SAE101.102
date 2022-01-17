@@ -112,6 +112,19 @@ float TailleMoyenne(Bambou tab[], int Taille) {
 	return moyenne;
 }
 
+int TailleMin(Bambou tab[], int taille) {
+
+	int imin;
+	imin = 0;
+
+	for (int i = 0; i < taille; i++) {
+		if (tab[imin].taille > tab[i].taille) {
+			imin = i;
+		}
+	}
+	return imin;
+}
+
 
 void croissance(Bambou tab[], int taille) {
 for (int i = 0; i < taille; i++) {
@@ -287,6 +300,37 @@ void Recharge_Sauvegarde_Jardin_Jour_Robot(Bambou tab[], Robot& panda1, Robot& p
 
 }
 
+void InitStats(Statistique tab[], int taille, int cpt_jour, Bambou tab_jardin[], int taille_jardin, int& indice_premier_plus_grand, int& indice_deuxieme_plus_grand) {
+
+	tab[cpt_jour].Jour = cpt_jour;
+
+	TailleMax(tab_jardin, taille_jardin, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+
+	tab[cpt_jour].val_TailleMax1 = tab_jardin[indice_premier_plus_grand].taille;
+	tab[cpt_jour].val_TailleMax2 = tab_jardin[indice_deuxieme_plus_grand].taille;
+	tab[cpt_jour].ind_TailleMax1 = indice_premier_plus_grand;
+	tab[cpt_jour].ind_TailleMax2 = indice_deuxieme_plus_grand;
+
+	float moyenne = TailleMoyenne(tab_jardin, taille_jardin);
+
+	tab[cpt_jour].TailleMoy = moyenne;
+
+	int minimum = TailleMin(tab_jardin, taille_jardin);
+
+	tab[cpt_jour].TailleMin = minimum;
+}
+
+void afficheStats(Statistique tab[], int jour, int indice_premier_plus_grand, int indice_deuxieme_plus_grand) {
+
+	cout << "Jour numero : " << tab[jour].Jour << endl;
+	cout << "-----------------" << endl;
+	cout << "Indice du premier plus grand : " << tab[jour].ind_TailleMax1 << endl;
+	cout << "Valeur du premier plus grand : " << tab[jour].val_TailleMax1 << endl;
+	cout << "-----------------" << endl;
+	cout << "Indice du deuxieme plus grand : " << tab[jour].ind_TailleMax2 << endl;
+	cout << "Valeur du deuxieme plus grand : " << tab[jour].val_TailleMax2 << endl;
+	cout << "-----------------" << endl;
+}
 
 int main(int argc, char* argv[]) {
 
@@ -316,9 +360,13 @@ int main(int argc, char* argv[]) {
 	}
 
 	bool simulation = true;
-	char continuer = ' ';
+	char continuer = ' ', mode;
 
-	while (simulation) {
+	cout << "Choix mode : 'f' pour Fast, 'm' pour Max." << endl;
+	cin >> mode;
+
+	if (mode == 'm') {
+		while (simulation) {
 		cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
 		cin >> continuer;
 
@@ -331,30 +379,8 @@ int main(int argc, char* argv[]) {
 
 		else if (continuer == 'r') {
 
-			RecupStats[cpt_jour].Jour = cpt_jour;
-
-			TailleMax(jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
-
-			RecupStats[cpt_jour].val_TailleMax1 = jardin[indice_premier_plus_grand].taille;
-			RecupStats[cpt_jour].val_TailleMax2 = jardin[indice_deuxieme_plus_grand].taille;
-			RecupStats[cpt_jour].ind_TailleMax1 = indice_premier_plus_grand;
-			RecupStats[cpt_jour].ind_TailleMax2 = indice_deuxieme_plus_grand;
-
-			cout << "Jour numero : " << RecupStats[cpt_jour].Jour << endl;
-			cout << "-----------------" << endl;
-			cout << "Indice du premier plus grand : " << indice_premier_plus_grand << endl;
-			cout << "Valeur du premier plus grand : " << jardin[indice_premier_plus_grand].taille << endl;
-			cout << "-----------------" << endl;
-			cout << "Indice du deuxieme plus grand : " << indice_deuxieme_plus_grand << endl;
-			cout << "Valeur du deuxieme plus grand : " << jardin[indice_deuxieme_plus_grand].taille << endl;
-			cout << "-----------------" << endl;
-
-			float moyenne = TailleMoyenne(jardin, TAILLE);
-
-			RecupStats[cpt_jour].TailleMoy = moyenne;
-			cout << "Moyenne de taille des bambous : " << moyenne << endl;
-
-			cpt_jour++;
+			InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+			afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
 			ReduceMax(jardin, TAILLE, panda1, panda2);
 			afficheTab(jardin, TAILLE);
@@ -362,8 +388,41 @@ int main(int argc, char* argv[]) {
 			afficheTab(jardin, TAILLE);
 			cout << "Batterie panda1 : " << panda1.batterie << endl;
 			cout << "Batterie panda2 : " << panda2.batterie << endl;
+
+			cpt_jour++;
 		}
 		cout << endl;
+		}
+	}
+
+	else if (mode == 'f') {
+		while (simulation) {
+			cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
+			cin >> continuer;
+
+			if (continuer == 'q') {
+				cout << "Fin." << endl;
+				simulation = false;
+
+				Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+			}
+
+			else if (continuer == 'r') {
+
+				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+
+				ReduceFast(jardin, TAILLE, panda1, panda2);
+				afficheTab(jardin, TAILLE);
+				croissance(jardin, TAILLE);
+				afficheTab(jardin, TAILLE);
+				cout << "Batterie panda1 : " << panda1.batterie << endl;
+				cout << "Batterie panda2 : " << panda2.batterie << endl;
+
+				cpt_jour++;
+			}
+			cout << endl;
+		}
 	}
 
 
