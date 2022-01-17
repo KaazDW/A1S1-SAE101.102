@@ -17,6 +17,7 @@ bool ActivStartMenu = false;
 
 
 void affiche(SDL_Renderer* rendu) {
+	ActivStartMenu = false;
 	SDL_RenderClear(rendu);
 	SDL_Rect rectarriereplan;
 	rectarriereplan.w = LargeurFenetre;
