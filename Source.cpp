@@ -410,19 +410,25 @@ void bambous_tracer(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
 	SDL_Rect rectangle_superieur;
 
 	rectangle_inferieur.w = 8;
-	rectangle_inferieur.h = 2;
+	rectangle_inferieur.h = 4;
 
-	rectangle_superieur.w = 10;
+	rectangle_superieur.w = 12;
 	rectangle_superieur.h = 1;
 	
 	for (int i = 0; i < taille_jardin; i++) {
-		rectangle_inferieur.x = 70 * 
-		for (int j = 0; j < jardin[i].taille; j++) {
+		rectangle_inferieur.x = 62 * i + 95;
+		rectangle_superieur.x = rectangle_inferieur.x - 2;
+		
+		for (int j = 0; j < jardin[i].taille; j++) {		
+			rectangle_superieur.y = 815 - 5 * j;
 			SDL_SetRenderDrawColor(rendu, 69, 224, 11, 255); // couleur verte
-			SDL_RenderFillRect(rendu, &rectangle);
+			SDL_RenderFillRect(rendu, &rectangle_superieur);
+			rectangle_inferieur.y = rectangle_superieur.y + 1;
+			SDL_SetRenderDrawColor(rendu, 151, 160, 9, 255); // couleur verte plus fonce
+			SDL_RenderFillRect(rendu, &rectangle_inferieur);
 		}
 	}
-
+	SDL_RenderPresent(rendu);
 }
 
 
@@ -445,7 +451,7 @@ int main(int argc, char* argv[]) {
 	InitRobot(panda1);
 	InitRobot(panda2);
 
-	
+	/*
 	bool simulation = true;
 	char choix_suite, mode;
 
@@ -481,6 +487,7 @@ int main(int argc, char* argv[]) {
 			cout << endl;
 		}
 	}
+	*/
 	/*
 	else if (mode == 'f') {
 
@@ -569,6 +576,7 @@ int main(int argc, char* argv[]) {
 						event.button.y>rectborduregauche.y &&
 						event.button.y < rectborduregauche.y + rectborduregauche.h) {
 						affiche(rendu);
+						bambous_tracer(rendu, jardin, TAILLE);
 					}
 					SDL_RenderPresent(rendu);//on rafraichit
 					if (event.button.button == SDL_BUTTON_LEFT) {//si on clique bouton gauche
