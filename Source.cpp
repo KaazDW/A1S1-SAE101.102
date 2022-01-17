@@ -207,8 +207,9 @@ int main(int argc, char* argv[]) {
 
 	// Déclaration tableau et constante
 	const int TAILLE = 12;
+	const int TAILLE_STATS = 100;
 	Bambou jardin[TAILLE];
-	Statistique RecupStats[100];
+	Statistique RecupStats[TAILLE_STATS];
 	int cpt = 0;
 
 	// Initialisation du tableau jardin
