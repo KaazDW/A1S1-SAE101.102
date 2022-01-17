@@ -95,11 +95,6 @@ void TailleMax(Bambou tab[], int taille, int &premier_plus_grand_ind, int &deuxi
 	tmp = tab[premier_plus_grand_ind];
 	tab[premier_plus_grand_ind] = tab[0];
 	tab[0] = tmp;
-
-
-	cout << "Le premier plus grand : " << premier_plus_grand_ind << endl;
-	cout << "Le deuxieme plus grand : " << deuxieme_plus_grand_ind << endl;
-
 }
 
 
@@ -244,10 +239,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		else if (continuer == 'r') {
-			ReduceMax(jardin, TAILLE, panda1, panda2);
-			afficheTab(jardin, TAILLE);
+			afficheTab(jardin, TAILLE);	
 			croissance(jardin, TAILLE);
 			afficheTab(jardin, TAILLE);
+			ReduceFast(jardin, TAILLE, panda1, panda2);
+
 			cout << "Batterie panda1 : " << panda1.batterie << endl;
 			cout << "Batterie panda2 : " << panda2.batterie << endl;
 		}
