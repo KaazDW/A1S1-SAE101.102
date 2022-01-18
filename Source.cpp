@@ -443,7 +443,7 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 }
 
 
-void affiche(SDL_Renderer* rendu) {
+void affiche(SDL_Renderer* rendu, Statistique tab[], int jour) {
 	ActivStartMenu = false;
 	SDL_RenderClear(rendu);
 	SDL_Rect rectarriereplan; //fond noir
@@ -610,7 +610,108 @@ void affiche(SDL_Renderer* rendu) {
 		SDL_RenderPresent(rendu);
 		SDL_DestroyTexture(texture11);
 
-	affiche_terre_bambou(rendu);
+
+	//Texte stats droite
+		//Jour :
+
+		TTF_Init();
+		TTF_Font* fontjour = TTF_OpenFont("C:\\Windows\\Fonts\\Calibrii.TTF", 35);
+		SDL_Color rougejour = { 255, 100, 100 , 255 };
+
+		SDL_Rect pos_jour;
+
+		pos_jour.x = 1363;
+		pos_jour.y = 60;
+		SDL_Texture* texturejour = loadText(rendu, "Jour : ", rougejour, fontjour);
+		SDL_QueryTexture(texturejour, NULL, NULL, &pos_jour.w, &pos_jour.h);
+		SDL_RenderCopy(rendu, texturejour, NULL, &pos_jour);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturejour);
+
+	//Taille min
+		TTF_Init();
+		TTF_Font* fonttextestat = TTF_OpenFont("C:\\Windows\\Fonts\\Calibri.TTF", 25);
+		SDL_Color couleurtext = { 100, 100, 100 , 255 };
+
+		SDL_Rect pos_text;
+		pos_text.x = 1363;
+		pos_text.y = 120;
+		SDL_Texture* texturetext = loadText(rendu, "Taille Min : ", couleurtext, fonttextestat);
+		SDL_QueryTexture(texturetext, NULL, NULL, &pos_text.w, &pos_text.h);
+		SDL_RenderCopy(rendu, texturetext, NULL, &pos_text);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturetext);
+
+	//Taille max 1
+		SDL_Rect pos_textmin1;
+		pos_textmin1.x = 1363;
+		pos_textmin1.y = 150;
+		SDL_Texture* texturetextmin1 = loadText(rendu, "Taille Max 1 :", couleurtext, fonttextestat);
+		SDL_QueryTexture(texturetextmin1, NULL, NULL, &pos_textmin1.w, &pos_textmin1.h);
+		SDL_RenderCopy(rendu, texturetextmin1, NULL, &pos_textmin1);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturetextmin1);
+
+	//Taille max 2
+		SDL_Rect pos_textmin2;
+		pos_textmin2.x = 1363;
+		pos_textmin2.y = 180;
+		SDL_Texture* texturetextmin2 = loadText(rendu, "Taille Max 2 :" , couleurtext, fonttextestat);
+		SDL_QueryTexture(texturetextmin2, NULL, NULL, &pos_textmin2.w, &pos_textmin2.h);
+		SDL_RenderCopy(rendu, texturetextmin2, NULL, &pos_textmin2);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturetextmin2);
+
+	//Taille moy
+		SDL_Rect pos_textmoy;
+		pos_textmoy.x = 1363;
+		pos_textmoy.y = 210;
+		SDL_Texture* texturetextmoy = loadText(rendu, "Taille Moy : ", couleurtext, fonttextestat);
+		SDL_QueryTexture(texturetextmoy, NULL, NULL, &pos_textmoy.w, &pos_textmoy.h);
+		SDL_RenderCopy(rendu, texturetextmoy, NULL, &pos_textmoy);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturetextmoy);
+
+	//Button 1
+		SDL_Rect pos_textbutton1;
+		pos_textbutton1.x = 1385;
+		pos_textbutton1.y = 725;
+		SDL_Texture* texturebutton1 = loadText(rendu, "1", couleurtext, fonttextestat);
+		SDL_QueryTexture(texturebutton1, NULL, NULL, &pos_textbutton1.w, &pos_textbutton1.h);
+		SDL_RenderCopy(rendu, texturebutton1, NULL, &pos_textbutton1);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturebutton1);
+
+		SDL_Rect pos_textbutton2;
+		pos_textbutton2.x = 1473;
+		pos_textbutton2.y = 725;
+		SDL_Texture* texturebutton2 = loadText(rendu, "2", couleurtext, fonttextestat);
+		SDL_QueryTexture(texturebutton2, NULL, NULL, &pos_textbutton2.w, &pos_textbutton2.h);
+		SDL_RenderCopy(rendu, texturebutton2, NULL, &pos_textbutton2);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturebutton2);
+
+		SDL_Rect pos_textbutton3;
+		pos_textbutton3.x = 1563;
+		pos_textbutton3.y = 725;
+		SDL_Texture* texturebutton3 = loadText(rendu, "3", couleurtext, fonttextestat);
+		SDL_QueryTexture(texturebutton3, NULL, NULL, &pos_textbutton3.w, &pos_textbutton3.h);
+		SDL_RenderCopy(rendu, texturebutton3, NULL, &pos_textbutton3);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturebutton3);
+
+		SDL_Rect pos_textmenu;
+		pos_textmenu.x = 1450;
+		pos_textmenu.y = 805;
+		SDL_Texture* texturebuttonmenu = loadText(rendu, "MENU", couleurtext, fonttextestat);
+		SDL_QueryTexture(texturebuttonmenu, NULL, NULL, &pos_textmenu.w, &pos_textmenu.h);
+		SDL_RenderCopy(rendu, texturebuttonmenu, NULL, &pos_textmenu);
+		SDL_RenderPresent(rendu);
+		SDL_DestroyTexture(texturebuttonmenu);
+
+		affiche_terre_bambou(rendu);
+
+
 
 	/*
 	TTF_Init();
@@ -673,34 +774,63 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 
 	TTF_Init();
 	TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\SHOWG.TTF", 60);
-	SDL_Color blanc = { 150, 150, 150 , 250 };
+	SDL_Color blanc = { 90, 90, 90 , 250 };
+	SDL_Color devant = { 255, 255, 255 , 255 };
+	SDL_Color textdansbox = { 255, 255, 255, 255 };
+	SDL_Color groupe = { 255, 255, 255 , 180 };
+
 
 	SDL_Rect pos_titre1;
-
-	pos_titre1.x = 463;
+	pos_titre1.x = 460;
 	pos_titre1.y = 190;
-	SDL_Texture* texturetitre = loadText(rendu, "Panda'Robot Simulator 1-8", blanc, font);
+	SDL_Texture* texturetitre = loadText(rendu, "Panda'Robot Simulator", blanc, font);
 	SDL_QueryTexture(texturetitre, NULL, NULL, &pos_titre1.w, &pos_titre1.h);
 	SDL_RenderCopy(rendu, texturetitre, NULL, &pos_titre1);
 	SDL_RenderPresent(rendu);
 	SDL_DestroyTexture(texturetitre);
 
-	TTF_Init();
-	TTF_Font* fonttitre = TTF_OpenFont("C:\\Windows\\Fonts\\SHOWG.TTF", 60);
-	SDL_Color noir = { 255, 255, 255 , 255 };
 
 	SDL_Rect pos_titre2;
-
-	pos_titre2.x = 463;
+	pos_titre2.x = 460;
 	pos_titre2.y = 186;
-	SDL_Texture* texturetitre2 = loadText(rendu, "Panda'Robot Simulator", noir, fonttitre);
+	SDL_Texture* texturetitre2 = loadText(rendu, "Panda'Robot Simulator", devant, font);
 	SDL_QueryTexture(texturetitre2, NULL, NULL, &pos_titre2.w, &pos_titre2.h);
 	SDL_RenderCopy(rendu, texturetitre2, NULL, &pos_titre2);
 	SDL_RenderPresent(rendu);
 	SDL_DestroyTexture(texturetitre2);
 
+	TTF_Init();
+	TTF_Font* fontgroupe = TTF_OpenFont("C:\\Windows\\Fonts\\GILSANUB.TTF", 25);
 
+	SDL_Rect pos_titregroupe;
+	pos_titregroupe.x = 683;
+	pos_titregroupe.y = 276;
+	SDL_Texture* texturegroupe = loadText(rendu, "Groupe 1 - 8 (S1G1)", groupe, fontgroupe);
+	SDL_QueryTexture(texturegroupe, NULL, NULL, &pos_titregroupe.w, &pos_titregroupe.h);
+	SDL_RenderCopy(rendu, texturegroupe, NULL, &pos_titregroupe);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturegroupe);
 
+	TTF_Init();
+	TTF_Font* fontmode = TTF_OpenFont("C:\\Windows\\Fonts\\GILSANUB.TTF", 23);
+
+	SDL_Rect pos_reducetitre;
+	pos_reducetitre.x = 475;
+	pos_reducetitre.y = 510;
+	SDL_Texture* texturereduce = loadText(rendu, "ReduceMax", textdansbox, fontmode);
+	SDL_QueryTexture(texturereduce, NULL, NULL, &pos_reducetitre.w, &pos_reducetitre.h);
+	SDL_RenderCopy(rendu, texturereduce, NULL, &pos_reducetitre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturereduce);
+
+	SDL_Rect pos_fastesttitre;
+	pos_fastesttitre.x = 1025;
+	pos_fastesttitre.y = 510;
+	SDL_Texture* texturefast = loadText(rendu, "ReduceFast", textdansbox, fontmode);
+	SDL_QueryTexture(texturefast, NULL, NULL, &pos_fastesttitre.w, &pos_fastesttitre.h);
+	SDL_RenderCopy(rendu, texturefast, NULL, &pos_fastesttitre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturefast);
 
 	/*
 		SDL_Surface* image = IMG_Load("shutdownlogo.png");
@@ -739,7 +869,7 @@ void affichage_panda1(SDL_Renderer* rendu, Robot& panda1, int taille) {
 
 	for (int i = 0; i < taille; i++) {
 		if (panda1.position[i] == true) {
-			posImg1.x = 62 * i + 65;
+			posImg1.x = 62 * i + 63;
 			SDL_QueryTexture(monImage1, NULL, NULL, &posImg1.w, &posImg1.h);
 			SDL_RenderCopy(rendu, monImage1, NULL, &posImg1);
 		}
@@ -766,7 +896,7 @@ void affichage_panda2(SDL_Renderer* rendu, Robot& panda1, int taille) {
 
 	for (int i = 0; i < taille; i++) {
 		if (panda1.position[i] == true) {
-			posImg1.x = 62 * i + 65;
+			posImg1.x = 62 * i + 63;
 			SDL_QueryTexture(monImage1, NULL, NULL, &posImg1.w, &posImg1.h);
 			SDL_RenderCopy(rendu, monImage1, NULL, &posImg1);
 		}
@@ -997,7 +1127,7 @@ int main(int argc, char* argv[]) {
 
 				ReduceMax(jardin, TAILLE, panda1, panda2);
 				SDL_RenderClear(rendu);
-				affiche(rendu);
+				affiche(rendu, RecupStats, cpt_jour);
 
 				affichage_panda1(rendu, panda1, TAILLE);
 				affichage_panda2(rendu, panda2, TAILLE);
@@ -1027,7 +1157,7 @@ int main(int argc, char* argv[]) {
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
 
-					affiche(rendu);
+					affiche(rendu, RecupStats, cpt_jour);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
 				if (ActivStartMenu == true &&
@@ -1038,7 +1168,7 @@ int main(int argc, char* argv[]) {
 					ActivChoixGauche = true;
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
-					affiche(rendu);
+					affiche(rendu, RecupStats, cpt_jour);
 					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
