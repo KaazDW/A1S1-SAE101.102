@@ -1,6 +1,6 @@
 
-#include<SDL.h> //ne pas oublier
-#include<SDL_ttf.h> //ne pas oublier
+#include<SDL.h> 
+#include<SDL_ttf.h>
 #include<iostream>
 #include "config_sdl.h"
 using namespace std;
