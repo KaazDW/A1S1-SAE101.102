@@ -177,12 +177,11 @@ int somme_croissance(Bambou tab[], int taille) {
 void ReduceMax(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 	int indice_premier = 0, indice_deuxieme = 0;
 	TailleMax(tab, taille, indice_premier, indice_deuxieme);
-	
+
 	if (panda1.batterie != 0 && panda2.batterie != 0)
 		deplacement(panda1, panda2, indice_premier, indice_deuxieme);
-	
+
 	batterie_et_decoupe(tab, panda1, panda2, indice_premier, indice_deuxieme);
-	
 }
 
 
@@ -444,16 +443,20 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 }
 
 
+void affiche_rect_milieu(SDL_Renderer* rendu) {
+	SDL_Rect rect; //fond millieu affichage des graphiques
+	rect.w = LargeurFenetre - 1245;
+	rect.h = HauteurFenetre - 50;
+	rect.y = 25;
+	rect.x = 930;
+	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
+	SDL_RenderFillRect(rendu, &rect);
+}
+
+
 void affiche(SDL_Renderer* rendu) {
 	ActivStartMenu = false;
-	SDL_RenderClear(rendu);
-	SDL_Rect rectarriereplan; //fond noir
-	rectarriereplan.w = LargeurFenetre;
-	rectarriereplan.h = HauteurFenetre;
-	rectarriereplan.y = 0;
-	rectarriereplan.x = 0;
-	SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
-	SDL_RenderFillRect(rendu, &rectarriereplan);
+	
 
 	SDL_Rect rectfond; //fond gauche affichage des bambou
 	rectfond.w = LargeurFenetre - 750;
@@ -463,20 +466,13 @@ void affiche(SDL_Renderer* rendu) {
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &rectfond);
 
-	SDL_Rect rect; //fond millieu affichage des graphiques
-	rect.w = LargeurFenetre - 1245;
-	rect.h = HauteurFenetre - 50;
-	rect.y = 25;
-	rect.x = 930;
+	SDL_Rect recta; //fond millieu affichage des graphiques
+	recta.w = 280; //fond droite affichage des info stat button
+	recta.h = HauteurFenetre - 50;
+	recta.y = 25;
+	recta.x = LargeurFenetre - 300;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
-	SDL_RenderFillRect(rendu, &rect);
-
-	rect.w = 280; //fond droite affichage des info stat button
-	rect.h = HauteurFenetre - 50;
-	rect.y = 25;
-	rect.x = LargeurFenetre - 300;
-	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
-	SDL_RenderFillRect(rendu, &rect);
+	SDL_RenderFillRect(rendu, &recta);
 
 	returnmenu_button.w = 250; //Button retour au menu de choix
 	returnmenu_button.h = 50;
@@ -507,6 +503,109 @@ void affiche(SDL_Renderer* rendu) {
 	SDL_RenderFillRect(rendu, &RectChoixSaveDroite);
 
 
+	//Texte Chiffre Ligne Bambou
+
+	TTF_Init();
+	TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\Calibri.ttf", 21);
+	SDL_Color blanc = { 255, 255, 255 , 80 };
+
+	SDL_Rect pos_chiffre;
+
+	pos_chiffre.x = 93;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture1 = loadText(rendu, "0", blanc, font);
+	SDL_QueryTexture(texture1, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture1, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture1);
+
+	pos_chiffre.x = 155;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture3 = loadText(rendu, "1", blanc, font);
+	SDL_QueryTexture(texture3, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture3, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture3);
+
+	pos_chiffre.x = 217;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture2 = loadText(rendu, "2", blanc, font);
+	SDL_QueryTexture(texture2, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture2, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture2);
+
+	pos_chiffre.x = 279;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture4 = loadText(rendu, "3", blanc, font);
+	SDL_QueryTexture(texture4, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture4, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture4);
+
+	pos_chiffre.x = 341;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture0 = loadText(rendu, "4", blanc, font);
+	SDL_QueryTexture(texture0, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture0, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture0);
+
+	pos_chiffre.x = 403;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture5 = loadText(rendu, "5", blanc, font);
+	SDL_QueryTexture(texture5, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture5, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture5);
+
+	pos_chiffre.x = 465;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture6 = loadText(rendu, "6", blanc, font);
+	SDL_QueryTexture(texture6, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture6, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture6);
+
+	pos_chiffre.x = 527;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture7 = loadText(rendu, "7", blanc, font);
+	SDL_QueryTexture(texture7, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture7, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture7);
+
+	pos_chiffre.x = 589;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture8 = loadText(rendu, "8", blanc, font);
+	SDL_QueryTexture(texture8, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture8, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture8);
+
+	pos_chiffre.x = 651;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture9 = loadText(rendu, "9", blanc, font);
+	SDL_QueryTexture(texture9, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture9, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture9);
+
+	pos_chiffre.x = 706;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture10 = loadText(rendu, "10", blanc, font);
+	SDL_QueryTexture(texture10, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture10, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture10);
+
+	pos_chiffre.x = 768;
+	pos_chiffre.y = 730;
+	SDL_Texture* texture11 = loadText(rendu, "11", blanc, font);
+	SDL_QueryTexture(texture11, NULL, NULL, &pos_chiffre.w, &pos_chiffre.h);
+	SDL_RenderCopy(rendu, texture11, NULL, &pos_chiffre);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texture11);
 
 	affiche_terre_bambou(rendu);
 
@@ -569,6 +668,37 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 	SDL_SetRenderDrawColor(rendu, 50, 20, 30, 255);
 	SDL_RenderFillRect(rendu, &rect);
 
+	TTF_Init();
+	TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\SHOWG.TTF", 60);
+	SDL_Color blanc = { 150, 150, 150 , 250 };
+
+	SDL_Rect pos_titre1;
+
+	pos_titre1.x = 463;
+	pos_titre1.y = 190;
+	SDL_Texture* texturetitre = loadText(rendu, "Panda'Robot Simulator 1-8", blanc, font);
+	SDL_QueryTexture(texturetitre, NULL, NULL, &pos_titre1.w, &pos_titre1.h);
+	SDL_RenderCopy(rendu, texturetitre, NULL, &pos_titre1);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturetitre);
+
+	TTF_Init();
+	TTF_Font* fonttitre = TTF_OpenFont("C:\\Windows\\Fonts\\SHOWG.TTF", 60);
+	SDL_Color noir = { 255, 255, 255 , 255 };
+
+	SDL_Rect pos_titre2;
+
+	pos_titre2.x = 463;
+	pos_titre2.y = 186;
+	SDL_Texture* texturetitre2 = loadText(rendu, "Panda'Robot Simulator", noir, fonttitre);
+	SDL_QueryTexture(texturetitre2, NULL, NULL, &pos_titre2.w, &pos_titre2.h);
+	SDL_RenderCopy(rendu, texturetitre2, NULL, &pos_titre2);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturetitre2);
+
+
+
+
 	/*
 		SDL_Surface* image = IMG_Load("shutdownlogo.png");
 		if (!image)
@@ -590,7 +720,7 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 
 void affichage_panda1(SDL_Renderer* rendu, Robot& panda1, int taille) {
 	SDL_Surface* image1 = IMG_Load("PandaGris.png");
-	
+
 	if (!image1)
 	{
 		cout << "Erreur de chargement de l'image : %s", SDL_GetError();
@@ -601,7 +731,7 @@ void affichage_panda1(SDL_Renderer* rendu, Robot& panda1, int taille) {
 	SDL_FreeSurface(image1);
 
 	SDL_Rect posImg1;
-	
+
 	posImg1.y = 760;
 
 	for (int i = 0; i < taille; i++) {
@@ -611,10 +741,9 @@ void affichage_panda1(SDL_Renderer* rendu, Robot& panda1, int taille) {
 			SDL_RenderCopy(rendu, monImage1, NULL, &posImg1);
 		}
 	}
-	
+
 	SDL_RenderPresent(rendu);
 }
-
 
 void affichage_panda2(SDL_Renderer* rendu, Robot& panda1, int taille) {
 	SDL_Surface* image1 = IMG_Load("PandaBleu.png");
@@ -634,7 +763,7 @@ void affichage_panda2(SDL_Renderer* rendu, Robot& panda1, int taille) {
 
 	for (int i = 0; i < taille; i++) {
 		if (panda1.position[i] == true) {
-			posImg1.x = 62 * i + 95;
+			posImg1.x = 62 * i + 65;
 			SDL_QueryTexture(monImage1, NULL, NULL, &posImg1.w, &posImg1.h);
 			SDL_RenderCopy(rendu, monImage1, NULL, &posImg1);
 		}
@@ -643,29 +772,6 @@ void affichage_panda2(SDL_Renderer* rendu, Robot& panda1, int taille) {
 	SDL_RenderPresent(rendu);
 }
 
-
-/*
-void deplacement_panda(SDL_Renderer* rendu, Robot &panda, int taille) {
-	for (int i = 0; i < taille; i++) {
-		if (panda.position[i] == true) {
-			SDL_Surface* image = IMG_Load("PandaGris.png");
-			if (!image)
-			{
-				cout << "Erreur de chargement de l'image : %s", SDL_GetError();
-				return;
-			}
-			SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
-			SDL_FreeSurface(image);
-			SDL_Rect posImg;
-			posImg.x = 40 * i + 95;
-			posImg.y = 760;
-			SDL_QueryTexture(monImage, NULL, NULL, &posImg.w, &posImg.h);
-			SDL_RenderCopy(rendu, monImage, NULL, &posImg);
-		}
-	}
-	SDL_RenderPresent(rendu);
-}
-*/
 
 void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
 
@@ -713,7 +819,82 @@ void NePasSauvegarder_EtRemove() {
 }
 
 
-										/*---------------------- MAIN ---------------------*/
+void placer_point_min(SDL_Renderer* rendu, Statistique tab[], int& cpt, int& x, int& y) {
+
+	SDL_Rect point;
+	point.x = 950 + 14 * cpt;
+	point.y = 780 - tab[cpt].TailleMin;
+
+	point.w = 3;
+	point.h = 3;
+
+	SDL_SetRenderDrawColor(rendu, 19, 51, 231, 255);
+	SDL_RenderFillRect(rendu, &point);
+	SDL_RenderPresent(rendu);
+
+	cpt = cpt % 25;
+
+	x = point.x;
+	y = point.y;
+}
+
+
+void placer_point_moy(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, int& y) {
+	
+	SDL_Rect point;
+	point.x = 950 + 14 * cpt;
+	point.y = 580 - tab[cpt].TailleMin;
+
+	point.w = 3;
+	point.h = 3;
+
+	SDL_SetRenderDrawColor(rendu, 3, 193, 17, 255);
+	SDL_RenderFillRect(rendu, &point);
+	SDL_RenderPresent(rendu);
+
+	cpt = cpt % 25;
+
+	x = point.x;
+	y = point.y;
+}
+
+
+void placer_point_max(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, int& y) {
+	
+	SDL_Rect point;
+	point.x = 950 + 14 * cpt;
+	point.y = 380 - tab[cpt].val_TailleMax1;
+
+	point.w = 3;
+	point.h = 3;
+
+	SDL_SetRenderDrawColor(rendu, 240, 255, 0, 255);
+	SDL_RenderFillRect(rendu, &point);
+	SDL_RenderPresent(rendu);
+
+	cpt = cpt % 25;
+
+	x = point.x;
+	y = point.y;
+}
+
+
+void tracer_droite(SDL_Renderer* rendu, int x1, int y1, int x2, int y2) {
+
+	if (y1 > 600) {
+		SDL_SetRenderDrawColor(rendu, 19, 51, 231, 255);
+		SDL_RenderDrawLine(rendu, x1, y1, x2, y2);
+	}
+	else if (y1 <= 600 && y1 > 400) {
+		SDL_SetRenderDrawColor(rendu, 3, 193, 17, 255);
+		SDL_RenderDrawLine(rendu, x1, y1, x2, y2);
+	}
+	else {
+		SDL_SetRenderDrawColor(rendu, 240, 255, 0, 255);
+		SDL_RenderDrawLine(rendu, x1, y1, x2, y2);
+	}
+	SDL_RenderPresent(rendu);
+}
 
 
 int main(int argc, char* argv[]) {
@@ -868,6 +1049,9 @@ int main(int argc, char* argv[]) {
 	/*affiche(rendu);*/
 	SDL_RenderPresent(rendu);
 
+	// Coordonnes des points utiles pour tracer courbe;
+	int x1, y1, x2, y2;
+	int compteur = 0;
 
 	bool continuer = true;   //booléen fin de programme
 	SDL_Event event;//gestion des évènements souris/clavier, 
@@ -886,14 +1070,22 @@ int main(int argc, char* argv[]) {
 				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
-
 				ReduceMax(jardin, TAILLE, panda1, panda2);
-				SDL_RenderClear(rendu);
+				//SDL_RenderClear(rendu);
 				affiche(rendu);
 
 				affichage_panda1(rendu, panda1, TAILLE);
 				affichage_panda2(rendu, panda2, TAILLE);
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
+
+				if (compteur == 0) {
+					affiche_rect_milieu(rendu);
+				}
+				placer_point_min(rendu, RecupStats, compteur, x1, y1);
+				placer_point_moy(rendu, RecupStats, compteur, x1, y1);
+				placer_point_max(rendu, RecupStats, compteur, x1, y1);
+
+
 				croissance(jardin, TAILLE);
 
 
@@ -902,8 +1094,8 @@ int main(int argc, char* argv[]) {
 				cout << "Batterie panda1 : " << panda1.batterie << endl;
 				cout << "Batterie panda2 : " << panda2.batterie << endl;
 
+				compteur++;
 				cpt_jour++;
-
 			}
 			break;
 		case SDL_MOUSEBUTTONUP://appui souris
@@ -930,7 +1122,17 @@ int main(int argc, char* argv[]) {
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
 					affiche(rendu);
+					SDL_RenderClear(rendu);
+					
+					SDL_Rect rectarriereplan; //fond noir
+					rectarriereplan.w = LargeurFenetre;
+					rectarriereplan.h = HauteurFenetre;
+					rectarriereplan.y = 0;
+					rectarriereplan.x = 0;
+					SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
+					SDL_RenderFillRect(rendu, &rectarriereplan);
 					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
+
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
 				if (event.button.x > returnmenu_button.x &&
