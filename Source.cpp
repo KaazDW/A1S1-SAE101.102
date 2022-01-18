@@ -585,9 +585,26 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 	return 0;
 }
 
+void affichage_panda(Robot& panda1, Robot& panda2) {
+	SDL_Surface* image = IMG_Load(".png");
+	if (!image)
+	{
+		cout << "Erreur de chargement de l'image : %s", SDL_GetError();
+		return -1;
+	}
+	SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
+	SDL_FreeSurface(image);
+	SDL_Rect posImg;
+	posImg.x = 100;
+	posImg.y = 100;
+	SDL_QueryTexture(monImage, NULL, NULL, &posImg.w, &posImg.h);
+	SDL_RenderCopy(rendu, monImage, NULL, &posImg);
+}
+
 
 void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
 
+	
 	SDL_Rect rectangle_inferieur;
 	SDL_Rect rectangle_superieur;
 
@@ -637,7 +654,7 @@ int main(int argc, char* argv[]) {
 
 	// Déclaration tableau et constante
 	const int TAILLE = 12;
-	const int TAILLE_STATS = 101;
+	const int TAILLE_STATS = 1000;
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
 	int cpt_jour = 0;
@@ -797,7 +814,30 @@ int main(int argc, char* argv[]) {
 						//on peut enlever SDL_Delay
 			continuer = false;
 			break;
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_r) { //touche r
+					
+				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
+				ReduceMax(jardin, TAILLE, panda1, panda2);
+				SDL_RenderClear(rendu);
+				affiche(rendu);
+				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
+
+				croissance(jardin, TAILLE);
+
+
+				afficheTab(jardin, TAILLE);
+				afficheTab(jardin, TAILLE);
+				croissance(jardin, TAILLE);
+				cout << "Batterie panda1 : " << panda1.batterie << endl;
+				cout << "Batterie panda2 : " << panda2.batterie << endl;
+
+				cpt_jour++;
+
+			}
+			break;
 		case SDL_MOUSEBUTTONUP://appui souris
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				if (ActivStartMenu == true &&
@@ -839,8 +879,6 @@ int main(int argc, char* argv[]) {
 					event.button.y < RectChoixSaveGauche.y + RectChoixSaveGauche.h) {
 					//fonction pour button Gauche
 					Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
-
-
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
 				if (ActivChoixGauche == true &&
