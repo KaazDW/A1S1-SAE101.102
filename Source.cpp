@@ -72,7 +72,7 @@ int TailleMin(Bambou tab[], int taille) {
 			imin = i;
 		}
 	}
-	return imin;
+	return tab[imin].taille;			// A mettre
 }
 
 
@@ -442,7 +442,7 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 	SDL_RenderPresent(rendu);
 }
 
-
+//			Cette fonction est a ajoute
 void affiche_rect_milieu(SDL_Renderer* rendu) {
 	SDL_Rect rect; //fond millieu affichage des graphiques
 	rect.w = LargeurFenetre - 1245;
@@ -465,6 +465,8 @@ void affiche(SDL_Renderer* rendu) {
 	rectfond.x = 25;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &rectfond);
+
+	// Il faut afficher la fenetre du milieu avec la fonction du dessus, c'est pour ca qu'elle a disparu d'ici
 
 	SDL_Rect recta; //fond millieu affichage des graphiques
 	recta.w = 280; //fond droite affichage des info stat button
@@ -843,7 +845,7 @@ void placer_point_moy(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, 
 	
 	SDL_Rect point;
 	point.x = 950 + 14 * cpt;
-	point.y = 580 - tab[cpt].TailleMin;
+	point.y = 580 - tab[cpt].TailleMoy;
 
 	point.w = 3;
 	point.h = 3;
@@ -1071,7 +1073,6 @@ int main(int argc, char* argv[]) {
 				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
 				ReduceMax(jardin, TAILLE, panda1, panda2);
-				//SDL_RenderClear(rendu);
 				affiche(rendu);
 
 				affichage_panda1(rendu, panda1, TAILLE);
@@ -1079,15 +1080,14 @@ int main(int argc, char* argv[]) {
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 
 				if (compteur == 0) {
-					affiche_rect_milieu(rendu);
+					affiche(rendu);											// A mettre
+					affiche_rect_milieu(rendu);							    // A mettre
 				}
-				placer_point_min(rendu, RecupStats, compteur, x1, y1);
-				placer_point_moy(rendu, RecupStats, compteur, x1, y1);
-				placer_point_max(rendu, RecupStats, compteur, x1, y1);
-
+				placer_point_min(rendu, RecupStats, compteur, x1, y1);		// A mettre
+				placer_point_moy(rendu, RecupStats, compteur, x1, y1);		// A mettre
+				placer_point_max(rendu, RecupStats, compteur, x1, y1);		// A mettre
 
 				croissance(jardin, TAILLE);
-
 
 				afficheTab(jardin, TAILLE);
 				afficheTab(jardin, TAILLE);
@@ -1123,7 +1123,7 @@ int main(int argc, char* argv[]) {
 					ActivChoixDroite = true;
 					affiche(rendu);
 					SDL_RenderClear(rendu);
-					
+
 					SDL_Rect rectarriereplan; //fond noir
 					rectarriereplan.w = LargeurFenetre;
 					rectarriereplan.h = HauteurFenetre;
@@ -1131,8 +1131,9 @@ int main(int argc, char* argv[]) {
 					rectarriereplan.x = 0;
 					SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
 					SDL_RenderFillRect(rendu, &rectarriereplan);
+					affiche(rendu);									// A mettre
+					affiche_rect_milieu(rendu);						// A mettre
 					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
-
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
 				if (event.button.x > returnmenu_button.x &&
