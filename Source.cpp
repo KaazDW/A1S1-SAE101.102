@@ -391,6 +391,23 @@ void afficheStats(Statistique tab[], int jour, int indice_premier_plus_grand, in
 	cout << "-----------------" << endl;
 }
 
+void Sauvegarder_Progression (Bambou jardin[], Statistique RecupStats[], Robot& panda1, Robot& panda2, int TAILLE, int TAILLE_STATS, int cpt_jour) {
+	
+	Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
+	Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+	cout << "Sauvegarde effectuee !" << endl;
+}
+
+void NePasSauvegarder() {
+	cout << "Aucune sauvegarde effectuee !" << endl;
+}
+
+void NePasSauvegarder_EtRemove() {
+	remove("jardin.txt");
+	remove("stats.txt");
+	cout << "Aucune sauvegarde et suppression des fichiers effectuee ! " << endl;
+}
+
 int main(int argc, char* argv[]) {
 
 	// Déclaration tableau et constante
@@ -451,17 +468,13 @@ int main(int argc, char* argv[]) {
 			cin >> choix;
 			
 			if (choix == 's') {
-				Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
-				Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
-				cout << "Sauvegarde effectuee !" << endl;
+				Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
 			}
 			if (choix == 'n') {
-				cout << "Aucune sauvegarde effectuee !" << endl;
+				NePasSauvegarder();
 			}
 			if (choix == 'r') {
-				remove("jardin.txt");
-				remove("stats.txt");
-				cout << "Aucune sauvegarde et suppression des fichiers effectuee ! " << endl;
+				NePasSauvegarder_EtRemove();
 			}
 				
 		}
