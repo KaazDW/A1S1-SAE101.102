@@ -614,19 +614,35 @@ void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int tai
 }
 
 
+void Sauvegarder_Progression(Bambou jardin[], Statistique RecupStats[], Robot& panda1, Robot& panda2, int TAILLE, int TAILLE_STATS, int cpt_jour) {
+
+	Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
+	Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+	cout << "Sauvegarde effectuee !" << endl;
+}
+
+void NePasSauvegarder() {
+	cout << "Aucune sauvegarde effectuee !" << endl;
+}
+
+void NePasSauvegarder_EtRemove() {
+	remove("jardin.txt");
+	remove("stats.txt");
+	cout << "Aucune sauvegarde et suppression des fichiers effectuee ! " << endl;
+}
+
+
+
 int main(int argc, char* argv[]) {
 
-	// Declaration tableau et constante
+	// Déclaration tableau et constante
 	const int TAILLE = 12;
 	const int TAILLE_STATS = 101;
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
 	int cpt_jour = 0;
 
-	// Initialisation du tableau jardin
-	InitTab(jardin, TAILLE);
-
-	// Initialisation des indices qui nous seront utiles apres appels de fonctions.
+	// Initialisation des indices qui nous seront utiles après appels de fonctions.
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
 
 	Robot panda1, panda2;
@@ -635,6 +651,10 @@ int main(int argc, char* argv[]) {
 	ifstream entree2("stats.txt", ios::in);
 	if (!entree) {
 		if (!entree2) {
+
+			entree.close();
+			entree2.close();
+
 			InitTab(jardin, TAILLE);
 			InitRobot(panda1);
 			InitRobot(panda2);
@@ -644,6 +664,10 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	else {
+
+		entree.close();
+		entree2.close();
+
 		Recharge_Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
 		Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 	}
@@ -666,8 +690,22 @@ int main(int argc, char* argv[]) {
 				cout << "Fin." << endl;
 				simulation = false;
 
-				Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
-				Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+				/*
+				char choix;
+				cout << "Entrez 's' pour sauvegarder la progression, 'n' pour fermer sans sauvegarder la progression, 'r' pour fermer sans sauvegarder la progression et supprimer les fichiers de sauvegarde" << endl;
+				cin >> choix;
+
+				if (choix == 's') {
+					Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
+				}
+				if (choix == 'n') {
+					NePasSauvegarder();
+				}
+				if (choix == 'r') {
+					NePasSauvegarder_EtRemove();
+				}
+				*/
+
 			}
 
 			else if (choix_suite == 'r') {
@@ -759,6 +797,7 @@ int main(int argc, char* argv[]) {
 						//on peut enlever SDL_Delay
 			continuer = false;
 			break;
+
 		case SDL_MOUSEBUTTONUP://appui souris
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				if (ActivStartMenu == true &&
@@ -797,6 +836,8 @@ int main(int argc, char* argv[]) {
 					event.button.y>RectChoixSaveGauche.y &&
 					event.button.y < RectChoixSaveGauche.y + RectChoixSaveGauche.h) {
 					//fonction pour button Gauche
+					Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
+
 
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
@@ -806,6 +847,33 @@ int main(int argc, char* argv[]) {
 					event.button.y>RectChoixSaveMillieu.y &&
 					event.button.y < RectChoixSaveMillieu.y + RectChoixSaveMillieu.h) {
 					//fonction pour button Millieu
+					NePasSauvegarder();
+					ifstream entree("jardin.txt", ios::in);
+					ifstream entree2("stats.txt", ios::in);
+					if (!entree) {
+						if (!entree2) {
+
+							entree.close();
+							entree2.close();
+
+							InitTab(jardin, TAILLE);
+							InitRobot(panda1);
+							InitRobot(panda2);
+						}
+						else {
+							cout << "Erreur, il manque un fichier de sauvegarde." << endl;
+						}
+					}
+					else {
+
+						entree.close();
+						entree2.close();
+
+						Recharge_Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
+						Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+					}
+					start_choice(rendu);
+
 
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
@@ -815,12 +883,13 @@ int main(int argc, char* argv[]) {
 					event.button.y>RectChoixSaveDroite.y &&
 					event.button.y < RectChoixSaveDroite.y + RectChoixSaveDroite.h) {
 					//fonction pour button Droite
+					NePasSauvegarder_EtRemove();
+					InitTab(jardin, TAILLE);
+					InitRobot(panda1);
+					InitRobot(panda2);
+					start_choice(rendu);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-
-
-
-
 
 				break;
 
