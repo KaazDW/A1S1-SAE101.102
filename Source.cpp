@@ -188,8 +188,7 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 
 	int somme_croissance_bambou = somme_croissance(tab, taille);
 
-	// double x = 1 + sqrt(5);
-	double x = 1.0;
+	double x = 1 + sqrt(5);
 	double taille_minimale = x * somme_croissance_bambou;
 
 	int indice_croissance1, indice_croissance2;
@@ -223,7 +222,7 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 
 	if (indice_croissance1 == indice_croissance2)
 		indice_croissance2 = 0;
-	
+
 
 	tmp = tab[indice_croissance1];
 	tab[indice_croissance1] = tab[0];
@@ -237,7 +236,7 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 }
 
 
-void InitStats(Statistique tab[], int taille, int cpt_jour, Bambou tab_jardin[], int taille_jardin, int &indice_premier_plus_grand, int &indice_deuxieme_plus_grand) {
+void InitStats(Statistique tab[], int taille, int cpt_jour, Bambou tab_jardin[], int taille_jardin, int& indice_premier_plus_grand, int& indice_deuxieme_plus_grand) {
 
 	tab[cpt_jour].Jour = cpt_jour;
 
@@ -436,7 +435,7 @@ bool ActivStartMenu = false;
 
 
 void affiche_terre_bambou(SDL_Renderer* rendu) {
-	SDL_SetRenderDrawColor(rendu, 255, 215, 0, 255);	
+	SDL_SetRenderDrawColor(rendu, 255, 215, 0, 255);
 	SDL_RenderDrawLine(rendu, 70, 720, 850, 720);
 	SDL_RenderPresent(rendu);
 }
@@ -588,7 +587,7 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 
 
 void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
-	
+
 	SDL_Rect rectangle_inferieur;
 	SDL_Rect rectangle_superieur;
 
@@ -597,13 +596,13 @@ void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int tai
 
 	rectangle_superieur.w = 12;
 	rectangle_superieur.h = 1;
-	
+
 	for (int i = 0; i < taille_jardin; i++) {
 		rectangle_inferieur.x = 62 * i + 95;
 		rectangle_superieur.x = rectangle_inferieur.x - 2;
-		
-		for (int j = 0; j < jardin[i].taille; j++) {		
-			rectangle_superieur.y = 715 - 5  * j;
+
+		for (int j = 0; j < jardin[i].taille; j++) {
+			rectangle_superieur.y = 715 - 5 * j;
 			SDL_SetRenderDrawColor(rendu, 69, 224, 11, 255); // couleur verte
 			SDL_RenderFillRect(rendu, &rectangle_superieur);
 			rectangle_inferieur.y = rectangle_superieur.y + 1;
@@ -614,35 +613,6 @@ void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int tai
 	SDL_RenderPresent(rendu);
 }
 
-/*
-void tracer_bambous_pour_reducefast(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
-
-	int somme_h = somme_croissance(jardin, taille_jardin);
-
-	SDL_Rect rectangle_inferieur, rectangle_superieur;
-
-	rectangle_inferieur.w = 8;
-	rectangle_superieur.w = 10;
-
-	rectangle_superieur.h = 1;
-
-	for (int i = 0; i < taille_jardin; i++) {
-		rectangle_inferieur.x = 62 * i + 95;
-		rectangle_superieur.x = rectangle_inferieur.x - 2;
-
-		for (int j = 0; j < jardin[i].taille; i++) {
-			rectangle_inferieur.h = (660 / (2 * somme_h)) * jardin[i].croissance;
-			rectangle_superieur.y = 715 - 5 * j;
-			SDL_SetRenderDrawColor(rendu, 69, 224, 11, 255);
-			SDL_RenderFillRect(rendu, &rectangle_superieur);
-			rectangle_inferieur.y = rectangle_superieur.y + 1;
-			SDL_SetRenderDrawColor(rendu, 151, 160, 9, 255);
-			SDL_RenderFillRect(rendu, &rectangle_inferieur);
-		}
-	}
-	SDL_RenderPresent(rendu);
-}
-*/
 
 int main(int argc, char* argv[]) {
 
@@ -678,7 +648,7 @@ int main(int argc, char* argv[]) {
 		Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 	}
 
-	
+
 	bool simulation = true;
 	char choix_suite, mode;
 
@@ -717,8 +687,8 @@ int main(int argc, char* argv[]) {
 			cout << endl;
 		}
 	}
-	
-	
+
+	/*
 	else if (mode == 'f') {
 
 		while (simulation) {
@@ -729,9 +699,6 @@ int main(int argc, char* argv[]) {
 			if (choix_suite == 'q') {
 				cout << "Fin." << endl;
 				simulation = false;
-
-				Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
-				Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 			}
 
 			else if (choix_suite == 'r') {
@@ -752,7 +719,7 @@ int main(int argc, char* argv[]) {
 			cout << endl;
 		}
 	}
-	
+	*/
 
 	//ouverture de la SDL
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -803,7 +770,6 @@ int main(int argc, char* argv[]) {
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
 					affiche(rendu);
-					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
 				if (ActivStartMenu == true &&
@@ -856,21 +822,21 @@ int main(int argc, char* argv[]) {
 
 
 
-						break;
+				break;
 
-					}
-
-				}
 			}
-			//destruction du renderer à la fin
-			SDL_DestroyRenderer(rendu);
 
-			//destruction à la fin
-			SDL_DestroyWindow(win);   //equivalent du delete
+		}
+	}
+	//destruction du renderer à la fin
+	SDL_DestroyRenderer(rendu);
 
-			//fermeture
-			SDL_Quit();
-		
+	//destruction à la fin
+	SDL_DestroyWindow(win);   //equivalent du delete
+
+	//fermeture
+	SDL_Quit();
+
 
 	return 0;
 }
