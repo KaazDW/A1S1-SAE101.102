@@ -585,12 +585,12 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 	return 0;
 }
 
-void affichage_panda(Robot& panda1, Robot& panda2) {
-	SDL_Surface* image = IMG_Load(".png");
+void affichage_panda(SDL_Renderer* rendu, Robot& panda1, Robot& panda2) {
+	SDL_Surface* image = IMG_Load("PandaGris.png");
 	if (!image)
 	{
 		cout << "Erreur de chargement de l'image : %s", SDL_GetError();
-		return -1;
+		return;
 	}
 	SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
 	SDL_FreeSurface(image);
@@ -599,12 +599,15 @@ void affichage_panda(Robot& panda1, Robot& panda2) {
 	posImg.y = 100;
 	SDL_QueryTexture(monImage, NULL, NULL, &posImg.w, &posImg.h);
 	SDL_RenderCopy(rendu, monImage, NULL, &posImg);
+	SDL_RenderPresent(rendu);
+
 }
 
 
 void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
 
-	
+
+
 	SDL_Rect rectangle_inferieur;
 	SDL_Rect rectangle_superieur;
 
@@ -816,7 +819,7 @@ int main(int argc, char* argv[]) {
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_r) { //touche r
-					
+
 				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
@@ -824,7 +827,7 @@ int main(int argc, char* argv[]) {
 				SDL_RenderClear(rendu);
 				affiche(rendu);
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
-
+				affichage_panda(rendu, panda1, panda2);
 				croissance(jardin, TAILLE);
 
 
