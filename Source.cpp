@@ -416,7 +416,6 @@ int main(int argc, char* argv[]) {
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
 	int cpt_jour = 0;
-	int cpt_for_stats = 0;
 
 	// Initialisation des indices qui nous seront utiles après appels de fonctions.
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
