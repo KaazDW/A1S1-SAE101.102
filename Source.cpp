@@ -585,28 +585,73 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 	return 0;
 }
 
-void affichage_panda(SDL_Renderer* rendu, Robot& panda1, Robot& panda2) {
-	SDL_Surface* image = IMG_Load("PandaGris.png");
-	if (!image)
+void affichage_panda(SDL_Renderer* rendu, Robot& panda1, Robot& panda2, int taille) {
+	SDL_Surface* image1 = IMG_Load("PandaGris.png");
+	SDL_Surface* image2 = IMG_Load("PandaBleu.png");
+	
+	if (!image1)
 	{
 		cout << "Erreur de chargement de l'image : %s", SDL_GetError();
 		return;
 	}
-	SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
-	SDL_FreeSurface(image);
-	SDL_Rect posImg;
-	posImg.x = 100;
-	posImg.y = 100;
-	SDL_QueryTexture(monImage, NULL, NULL, &posImg.w, &posImg.h);
-	SDL_RenderCopy(rendu, monImage, NULL, &posImg);
-	SDL_RenderPresent(rendu);
 
+	if (!image2) {
+		cout << "Erreur de chargement de l'image : PandaBleu", SDL_GetError();
+		return;
+	}
+
+	SDL_Texture* monImage1 = SDL_CreateTextureFromSurface(rendu, image1);
+	SDL_Texture* monImage2 = SDL_CreateTextureFromSurface(rendu, image2);
+	SDL_FreeSurface(image1);
+	SDL_FreeSurface(image2);
+
+	SDL_Rect posImg1;
+	SDL_Rect posImg2;
+	
+	posImg1.y = 760;
+	posImg2.y = 760;
+
+	for (int i = 0; i < taille; i++) {
+		if (panda1.position[i] == true) {
+			posImg1.x = 40 * i + 95;
+			SDL_QueryTexture(monImage1, NULL, NULL, &posImg1.w, &posImg1.h);
+			SDL_RenderCopy(rendu, monImage1, NULL, &posImg1);
+		}
+	}
+	for (int i = 0; i < taille; i++) {
+		if (panda2.position[i] == true) {
+			posImg1.x = 40 * i + 95;
+			SDL_QueryTexture(monImage2, NULL, NULL, &posImg2.w, &posImg2.h);
+			SDL_RenderCopy(rendu, monImage2, NULL, &posImg2);
+		}
+	}
+	SDL_RenderPresent(rendu);
 }
 
+/*
+void deplacement_panda(SDL_Renderer* rendu, Robot &panda, int taille) {
+	for (int i = 0; i < taille; i++) {
+		if (panda.position[i] == true) {
+			SDL_Surface* image = IMG_Load("PandaGris.png");
+			if (!image)
+			{
+				cout << "Erreur de chargement de l'image : %s", SDL_GetError();
+				return;
+			}
+			SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
+			SDL_FreeSurface(image);
+			SDL_Rect posImg;
+			posImg.x = 40 * i + 95;
+			posImg.y = 760;
+			SDL_QueryTexture(monImage, NULL, NULL, &posImg.w, &posImg.h);
+			SDL_RenderCopy(rendu, monImage, NULL, &posImg);
+		}
+	}
+	SDL_RenderPresent(rendu);
+}
+*/
 
 void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
-
-
 
 	SDL_Rect rectangle_inferieur;
 	SDL_Rect rectangle_superieur;
@@ -827,7 +872,7 @@ int main(int argc, char* argv[]) {
 				SDL_RenderClear(rendu);
 				affiche(rendu);
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
-				affichage_panda(rendu, panda1, panda2);
+				affichage_panda(rendu, panda1, panda2, TAILLE);
 				croissance(jardin, TAILLE);
 
 
