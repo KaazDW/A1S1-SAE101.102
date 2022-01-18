@@ -300,6 +300,63 @@ void Recharge_Sauvegarde_Jardin_Jour_Robot(Bambou tab[], Robot& panda1, Robot& p
 
 }
 
+void Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
+	ofstream sortie("stats.txt", ios::trunc);
+	
+	for (int i = 0; i < taille; i++) {
+		if (tab[i].Jour >= 0) {
+			sortie << tab[i].Jour << endl;
+			sortie << tab[i].TailleMin << endl;
+			sortie << tab[i].ind_TailleMax1 << ',' << tab[i].val_TailleMax1 << endl;
+			sortie << tab[i].ind_TailleMax2 << ',' << tab[i].val_TailleMax2 << endl;
+			sortie << tab[i].TailleMoy << endl;
+		}
+		else {
+			return;
+		}
+	}
+}
+
+void Recharge_Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
+	ifstream entree("stats.txt", ios::in);//declaration du flot 
+	if (!entree) //si le flot vaut false
+		cout << "Probleme d'ouverture " << endl;
+	else {
+		//lecture du fichier ici (cf. ci-dessous)
+
+		while (!entree.eof()) {
+
+			char jour[100], min[100], ind_max1[100], val_max1[100], ind_max2[100], val_max2[100], moy[100];
+				
+			entree.getline(jour, 100);
+			entree.getline(min, 100);
+			entree.getline(ind_max1, 100, ',');
+			entree.getline(val_max1, 100);
+			entree.getline(ind_max2, 100, ',');
+			entree.getline(val_max2, 100);
+			entree.getline(moy, 100);
+
+			int _jour = atoi(jour);
+			int _min = atoi(min);
+			int _ind_max1 = atoi(ind_max1);
+			int _val_max1 = atoi(val_max1);
+			int _ind_max2 = atoi(ind_max2);
+			int _val_max2 = atoi(val_max2);
+			float _moy = atof(moy);
+
+			tab[_jour].Jour = _jour;
+			tab[_jour].TailleMin = _min;
+			tab[_jour].ind_TailleMax1 = _ind_max1;
+			tab[_jour].val_TailleMax1 = _val_max1;
+			tab[_jour].ind_TailleMax2 = _ind_max2;
+			tab[_jour].val_TailleMax2 = _val_max2;
+			tab[_jour].TailleMoy = _moy;
+		}
+
+		entree.close();
+	}
+}
+
 void InitStats(Statistique tab[], int taille, int cpt_jour, Bambou tab_jardin[], int taille_jardin, int& indice_premier_plus_grand, int& indice_deuxieme_plus_grand) {
 
 	tab[cpt_jour].Jour = cpt_jour;
@@ -340,9 +397,7 @@ int main(int argc, char* argv[]) {
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
 	int cpt_jour = 0;
-
-	// Initialisation du tableau jardin
-
+	int cpt_for_stats = 0;
 
 	// Initialisation des indices qui nous seront utiles après appels de fonctions.
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
@@ -350,12 +405,19 @@ int main(int argc, char* argv[]) {
 	Robot panda1, panda2;
 
 	ifstream entree("jardin.txt", ios::in);
+	ifstream entree2("stats.txt", ios::in);
 	if (!entree) {
-		InitTab(jardin, TAILLE);
-		InitRobot(panda1);
-		InitRobot(panda2);
+		if (!entree2) {
+			InitTab(jardin, TAILLE);
+			InitRobot(panda1);
+			InitRobot(panda2);
+		}
+		else {
+			cout << "Erreur, il manque un fichier de sauvegarde." << endl;
+		}
 	}
 	else {
+		Recharge_Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
 		Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 	}
 
@@ -374,6 +436,7 @@ int main(int argc, char* argv[]) {
 			cout << "Fin." << endl;
 			simulation = false;
 
+			Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
 			Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 		}
 
@@ -404,6 +467,7 @@ int main(int argc, char* argv[]) {
 				cout << "Fin." << endl;
 				simulation = false;
 
+				Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
 				Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 			}
 
