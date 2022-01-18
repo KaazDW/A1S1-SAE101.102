@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "config_sdl.h"
+#include<fstream>
 using namespace std;
 
 
@@ -162,6 +163,17 @@ void batterie_et_decoupe(Bambou tab[], Robot& panda1, Robot& panda2, int indice_
 }
 
 
+int somme_croissance(Bambou tab[], int taille) {
+	int somme_croissance_bambou = 0;
+
+	for (int i = 0; i < taille; i++) {
+		somme_croissance_bambou += tab[i].croissance;
+	}
+
+	return somme_croissance_bambou;
+}
+
+
 void ReduceMax(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 	int indice_premier = 0, indice_deuxieme = 0;
 	TailleMax(tab, taille, indice_premier, indice_deuxieme);
@@ -174,11 +186,7 @@ void ReduceMax(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 
 void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 
-	int somme_croissance_bambou = 0;
-
-	for (int i = 0; i < taille; i++) {
-		somme_croissance_bambou += tab[i].croissance;
-	}
+	int somme_croissance_bambou = somme_croissance(tab, taille);
 
 	double x = 1 + sqrt(5);
 	double taille_minimale = x * somme_croissance_bambou;
@@ -262,6 +270,142 @@ void afficheStats(Statistique tab[], int jour, int indice_premier_plus_grand, in
 }
 
 
+void Sauvegarde_Jardin_Jour_Robot(Bambou tab[], Robot& panda1, Robot& panda2, int taille, int cpt_jour) {
+	ofstream sortie("jardin.txt", ios::trunc);
+
+	for (int i = 0; i < taille; i++) {
+		sortie << tab[i].num << ',';
+		sortie << tab[i].taille << ',';
+		sortie << tab[i].croissance << endl;
+	}
+
+	for (int j = 0; j < taille; j++) {
+		if (panda1.position[j] == true) {
+			sortie << panda1.batterie << ',';
+			sortie << j << endl;
+		}
+		if (panda2.position[j] == true) {
+			sortie << panda2.batterie << ',';
+			sortie << j << endl;
+		}
+	}
+
+	sortie << cpt_jour << endl;
+
+	sortie.close();
+}
+
+void Recharge_Sauvegarde_Jardin_Jour_Robot(Bambou tab[], Robot& panda1, Robot& panda2, int taille_tab, int& cpt_jour) {
+
+	ifstream entree("jardin.txt", ios::in);//declaration du flot 
+	if (!entree) //si le flot vaut false
+		cout << "Probleme d'ouverture " << endl;
+	else {
+		//lecture du fichier ici (cf. ci-dessous)
+
+		int i = 0;
+		for (; i < taille_tab; i++) {
+			char c_num[100], c_taille[100], c_croissance[100];
+			entree.getline(c_num, 100, ',');
+			entree.getline(c_taille, 100, ',');
+			entree.getline(c_croissance, 100);
+
+			int Num = atoi(c_num);
+			int Taille = atoi(c_taille);
+			int Croissance = atoi(c_croissance);
+
+			tab[i].num = Num;
+			tab[i].taille = Taille;
+			tab[i].croissance = Croissance;
+		}
+
+		char batterie[100], position[100];
+		entree.getline(batterie, 100, ',');
+		entree.getline(position, 100);
+
+		int bat = atoi(batterie);
+		int pos = atoi(position);
+
+		panda1.batterie = bat;
+		panda1.position[pos] = 1;
+
+		entree.getline(batterie, 100, ',');
+		entree.getline(position, 100);
+
+		bat = atoi(batterie);
+		pos = atoi(position);
+
+		panda2.batterie = bat;
+		panda2.position[pos] = 1;
+
+		char jour[100];
+		entree.getline(jour, 100);
+		cpt_jour = atoi(jour);
+
+		entree.close();
+	}
+
+}
+
+void Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
+	ofstream sortie("stats.txt", ios::trunc);
+
+	for (int i = 0; i < taille; i++) {
+		if (tab[i].Jour >= 0) {
+			sortie << tab[i].Jour << endl;
+			sortie << tab[i].TailleMin << endl;
+			sortie << tab[i].ind_TailleMax1 << ',' << tab[i].val_TailleMax1 << endl;
+			sortie << tab[i].ind_TailleMax2 << ',' << tab[i].val_TailleMax2 << endl;
+			sortie << tab[i].TailleMoy << endl;
+		}
+		else {
+			return;
+		}
+	}
+}
+
+void Recharge_Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
+	ifstream entree("stats.txt", ios::in);//declaration du flot 
+	if (!entree) //si le flot vaut false
+		cout << "Probleme d'ouverture " << endl;
+	else {
+		//lecture du fichier ici (cf. ci-dessous)
+
+		while (!entree.eof()) {
+
+			char jour[100], min[100], ind_max1[100], val_max1[100], ind_max2[100], val_max2[100], moy[100];
+
+			entree.getline(jour, 100);
+			entree.getline(min, 100);
+			entree.getline(ind_max1, 100, ',');
+			entree.getline(val_max1, 100);
+			entree.getline(ind_max2, 100, ',');
+			entree.getline(val_max2, 100);
+			entree.getline(moy, 100);
+
+			int _jour = atoi(jour);
+			int _min = atoi(min);
+			int _ind_max1 = atoi(ind_max1);
+			int _val_max1 = atoi(val_max1);
+			int _ind_max2 = atoi(ind_max2);
+			int _val_max2 = atoi(val_max2);
+			float _moy = atof(moy);
+
+			tab[_jour].Jour = _jour;
+			tab[_jour].TailleMin = _min;
+			tab[_jour].ind_TailleMax1 = _ind_max1;
+			tab[_jour].val_TailleMax1 = _val_max1;
+			tab[_jour].ind_TailleMax2 = _ind_max2;
+			tab[_jour].val_TailleMax2 = _val_max2;
+			tab[_jour].TailleMoy = _moy;
+		}
+
+		entree.close();
+	}
+}
+
+
+
 // Fonction en rapport a SDL et constantes
 
 const int PositionX_leaveButton = 700;
@@ -274,9 +418,10 @@ SDL_Rect rectborduredroite;
 
 bool ActivStartMenu = false;
 
+
 void affiche_terre_bambou(SDL_Renderer* rendu) {
 	SDL_SetRenderDrawColor(rendu, 255, 215, 0, 255);	
-	SDL_RenderDrawLine(rendu, 70, 820, 850, 820);
+	SDL_RenderDrawLine(rendu, 70, 720, 850, 720);
 	SDL_RenderPresent(rendu);
 }
 
@@ -404,7 +549,7 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 }
 
 
-void bambous_tracer(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
+void bambous_tracer_pour_reducemax(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
 	
 	SDL_Rect rectangle_inferieur;
 	SDL_Rect rectangle_superieur;
@@ -420,7 +565,7 @@ void bambous_tracer(SDL_Renderer* rendu, Bambou jardin[], int taille_jardin) {
 		rectangle_superieur.x = rectangle_inferieur.x - 2;
 		
 		for (int j = 0; j < jardin[i].taille; j++) {		
-			rectangle_superieur.y = 815 - 5 * j;
+			rectangle_superieur.y = 715 - 5  * j;
 			SDL_SetRenderDrawColor(rendu, 69, 224, 11, 255); // couleur verte
 			SDL_RenderFillRect(rendu, &rectangle_superieur);
 			rectangle_inferieur.y = rectangle_superieur.y + 1;
@@ -448,10 +593,25 @@ int main(int argc, char* argv[]) {
 	int indice_premier_plus_grand = 0, indice_deuxieme_plus_grand = 0;
 
 	Robot panda1, panda2;
-	InitRobot(panda1);
-	InitRobot(panda2);
 
-	/*
+	ifstream entree("jardin.txt", ios::in);
+	ifstream entree2("stats.txt", ios::in);
+	if (!entree) {
+		if (!entree2) {
+			InitTab(jardin, TAILLE);
+			InitRobot(panda1);
+			InitRobot(panda2);
+		}
+		else {
+			cout << "Erreur, il manque un fichier de sauvegarde." << endl;
+		}
+	}
+	else {
+		Recharge_Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
+		Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+	}
+
+	
 	bool simulation = true;
 	char choix_suite, mode;
 
@@ -468,6 +628,9 @@ int main(int argc, char* argv[]) {
 			if (choix_suite == 'q') {
 				cout << "Fin." << endl;
 				simulation = false;
+
+				Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
+				Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 			}
 
 			else if (choix_suite == 'r') {
@@ -487,7 +650,7 @@ int main(int argc, char* argv[]) {
 			cout << endl;
 		}
 	}
-	*/
+	
 	/*
 	else if (mode == 'f') {
 
@@ -576,7 +739,7 @@ int main(int argc, char* argv[]) {
 						event.button.y>rectborduregauche.y &&
 						event.button.y < rectborduregauche.y + rectborduregauche.h) {
 						affiche(rendu);
-						bambous_tracer(rendu, jardin, TAILLE);
+						bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 					}
 					SDL_RenderPresent(rendu);//on rafraichit
 					if (event.button.button == SDL_BUTTON_LEFT) {//si on clique bouton gauche
