@@ -821,11 +821,11 @@ void NePasSauvegarder_EtRemove() {
 }
 
 
-void placer_point_min(SDL_Renderer* rendu, Statistique tab[], int& cpt, int& x, int& y) {
+void placer_point_min(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, int& y, int cpt_jour) { // A changer
 
 	SDL_Rect point;
 	point.x = 950 + 14 * cpt;
-	point.y = 780 - tab[cpt].TailleMin;
+	point.y = 780 - tab[cpt_jour].TailleMin; // A changer
 
 	point.w = 3;
 	point.h = 3;
@@ -834,18 +834,18 @@ void placer_point_min(SDL_Renderer* rendu, Statistique tab[], int& cpt, int& x, 
 	SDL_RenderFillRect(rendu, &point);
 	SDL_RenderPresent(rendu);
 
-	cpt = cpt % 25;
+	cpt = cpt % 26;
 
 	x = point.x;
 	y = point.y;
 }
 
 
-void placer_point_moy(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, int& y) {
+void placer_point_moy(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, int& y, int cpt_jour) { // A changer
 	
 	SDL_Rect point;
 	point.x = 950 + 14 * cpt;
-	point.y = 580 - tab[cpt].TailleMoy;
+	point.y = 580 - tab[cpt_jour].TailleMoy; // A changer
 
 	point.w = 3;
 	point.h = 3;
@@ -854,18 +854,18 @@ void placer_point_moy(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, 
 	SDL_RenderFillRect(rendu, &point);
 	SDL_RenderPresent(rendu);
 
-	cpt = cpt % 25;
+	cpt = cpt % 26;
 
 	x = point.x;
 	y = point.y;
 }
 
 
-void placer_point_max(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, int& y) {
+void placer_point_max(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, int& y, int cpt_jour) { // A changer
 	
 	SDL_Rect point;
 	point.x = 950 + 14 * cpt;
-	point.y = 380 - tab[cpt].val_TailleMax1;
+	point.y = 380 - tab[cpt_jour].val_TailleMax1; // A changer
 
 	point.w = 3;
 	point.h = 3;
@@ -874,7 +874,7 @@ void placer_point_max(SDL_Renderer* rendu, Statistique tab[], int &cpt, int& x, 
 	SDL_RenderFillRect(rendu, &point);
 	SDL_RenderPresent(rendu);
 
-	cpt = cpt % 25;
+	cpt = cpt % 26;
 
 	x = point.x;
 	y = point.y;
@@ -885,15 +885,15 @@ void tracer_droite(SDL_Renderer* rendu, int x1, int y1, int x2, int y2) {
 
 	if (y1 > 600) {
 		SDL_SetRenderDrawColor(rendu, 19, 51, 231, 255);
-		SDL_RenderDrawLine(rendu, x1, y1, x2, y2);
+		SDL_RenderDrawLine(rendu, x1 + 1, y1 + 1, x2 + 1, y2 + 1);
 	}
 	else if (y1 <= 600 && y1 > 400) {
 		SDL_SetRenderDrawColor(rendu, 3, 193, 17, 255);
-		SDL_RenderDrawLine(rendu, x1, y1, x2, y2);
+		SDL_RenderDrawLine(rendu, x1 + 1, y1 + 1, x2 + 1, y2 + 1);
 	}
 	else {
 		SDL_SetRenderDrawColor(rendu, 240, 255, 0, 255);
-		SDL_RenderDrawLine(rendu, x1, y1, x2, y2);
+		SDL_RenderDrawLine(rendu, x1 + 1, y1 + 1, x2 + 1, y2 + 1);
 	}
 	SDL_RenderPresent(rendu);
 }
@@ -937,7 +937,6 @@ int main(int argc, char* argv[]) {
 		Recharge_Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
 		Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 	}
-
 
 	bool simulation = true;
 	char choix_suite, mode;
@@ -1051,8 +1050,10 @@ int main(int argc, char* argv[]) {
 	/*affiche(rendu);*/
 	SDL_RenderPresent(rendu);
 
-	// Coordonnes des points utiles pour tracer courbe;
-	int x1, y1, x2, y2;
+	// Coordonnes des points utiles pour tracer courbe et variable compteur;
+	int x1_min, y1_min, x2_min, y2_min;    // a rajouter
+	int x1_moy, y1_moy, x2_moy, y2_moy;    // a rajouter
+	int x1_max, y1_max, x2_max, y2_max;	   // a rajouter
 	int compteur = 0;
 
 	bool continuer = true;   //booléen fin de programme
@@ -1078,14 +1079,34 @@ int main(int argc, char* argv[]) {
 				affichage_panda1(rendu, panda1, TAILLE);
 				affichage_panda2(rendu, panda2, TAILLE);
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
+				
+				if (compteur > 0) 
+					x2_min = x1_min, y2_min = y1_min;
 
-				if (compteur == 0) {
-					affiche(rendu);											// A mettre
-					affiche_rect_milieu(rendu);							    // A mettre
+				placer_point_min(rendu, RecupStats, compteur, x1_min, y1_min, cpt_jour);		// A mettre
+				
+				if (compteur > 0)
+					tracer_droite(rendu, x1_min, y1_min, x2_min, y2_min);
+				
+				if (compteur > 0)
+					x2_moy = x1_moy, y2_moy = y1_moy;
+				
+				placer_point_moy(rendu, RecupStats, compteur, x1_moy, y1_moy, cpt_jour);		// A mettre
+
+				if (compteur > 0)
+					tracer_droite(rendu, x1_moy, y1_moy, x2_moy, y2_moy);
+				
+				if (compteur > 0)
+					x2_max = x1_max, y2_max = y1_max;
+
+				placer_point_max(rendu, RecupStats, compteur, x1_max, y1_max, cpt_jour);		// A mettre
+
+				if (compteur > 0)
+					tracer_droite(rendu, x1_max, y1_max, x2_max, y2_max);
+
+				if (compteur == 25) {											// A mettre
+					affiche_rect_milieu(rendu);								    // A mettre
 				}
-				placer_point_min(rendu, RecupStats, compteur, x1, y1);		// A mettre
-				placer_point_moy(rendu, RecupStats, compteur, x1, y1);		// A mettre
-				placer_point_max(rendu, RecupStats, compteur, x1, y1);		// A mettre
 
 				croissance(jardin, TAILLE);
 
