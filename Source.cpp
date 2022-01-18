@@ -294,14 +294,12 @@ void Recharge_Sauvegarde_Jardin_Jour_Robot(Bambou tab[], Robot& panda1, Robot& p
 		char jour[100];
 		entree.getline(jour, 100);
 		cpt_jour = atoi(jour);
-
-		entree.close();
 	}
-
+	entree.close();
 }
 
 void Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
-	ofstream sortie("stats.txt", ios::trunc);
+	ofstream sortie("stats.txt", ios::out);
 	
 	for (int i = 0; i < taille; i++) {
 		if (tab[i].Jour >= 0) {
@@ -309,12 +307,17 @@ void Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
 			sortie << tab[i].TailleMin << endl;
 			sortie << tab[i].ind_TailleMax1 << ',' << tab[i].val_TailleMax1 << endl;
 			sortie << tab[i].ind_TailleMax2 << ',' << tab[i].val_TailleMax2 << endl;
-			sortie << tab[i].TailleMoy << endl;
+			sortie << tab[i].TailleMoy;
+			if (i < taille-1 && tab[i+1].Jour >= 0) {
+				sortie << endl;
+			}
 		}
 		else {
+			sortie.close();
 			return;
 		}
 	}
+	sortie.close();
 }
 
 void Recharge_Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
@@ -352,9 +355,8 @@ void Recharge_Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
 			tab[_jour].val_TailleMax2 = _val_max2;
 			tab[_jour].TailleMoy = _moy;
 		}
-
-		entree.close();
 	}
+	entree.close();
 }
 
 void InitStats(Statistique tab[], int taille, int cpt_jour, Bambou tab_jardin[], int taille_jardin, int& indice_premier_plus_grand, int& indice_deuxieme_plus_grand) {
@@ -408,6 +410,10 @@ int main(int argc, char* argv[]) {
 	ifstream entree2("stats.txt", ios::in);
 	if (!entree) {
 		if (!entree2) {
+
+			entree.close();
+			entree2.close();
+
 			InitTab(jardin, TAILLE);
 			InitRobot(panda1);
 			InitRobot(panda2);
@@ -417,6 +423,10 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	else {
+
+		entree.close();
+		entree2.close();
+
 		Recharge_Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
 		Recharge_Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
 	}
@@ -435,9 +445,25 @@ int main(int argc, char* argv[]) {
 		if (continuer == 'q') {
 			cout << "Fin." << endl;
 			simulation = false;
-
-			Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
-			Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+			
+			char choix;
+			cout << "Entrez 's' pour sauvegarder la progression, 'n' pour fermer sans sauvegarder la progression, 'r' pour fermer sans sauvegarder la progression et supprimer les fichiers de sauvegarde" << endl;
+			cin >> choix;
+			
+			if (choix == 's') {
+				Sauvegarde_Stats_Graphique(RecupStats, TAILLE_STATS);
+				Sauvegarde_Jardin_Jour_Robot(jardin, panda1, panda2, TAILLE, cpt_jour);
+				cout << "Sauvegarde effectuee !" << endl;
+			}
+			if (choix == 'n') {
+				cout << "Aucune sauvegarde effectuee !" << endl;
+			}
+			if (choix == 'r') {
+				remove("jardin.txt");
+				remove("stats.txt");
+				cout << "Aucune sauvegarde et suppression des fichiers effectuee ! " << endl;
+			}
+				
 		}
 
 		else if (continuer == 'r') {
