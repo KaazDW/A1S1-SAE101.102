@@ -617,9 +617,14 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int jour) {
 		TTF_Init();
 		TTF_Font* fontjour = TTF_OpenFont("C:\\Windows\\Fonts\\Calibrii.TTF", 35);
 		SDL_Color rougejour = { 255, 100, 100 , 255 };
+		
+		/* VOIR LE PROF POUR SAVOIR COMMENT CONVERTIR
+		int _Jour = tab[jour].Jour;
+		char valeur[] = "";
+		_itoa_s(_Jour, valeur, 10);
+		*/
 
 		SDL_Rect pos_jour;
-
 		pos_jour.x = 1363;
 		pos_jour.y = 60;
 		SDL_Texture* texturejour = loadText(rendu, "Jour : ", rougejour, fontjour);
@@ -627,6 +632,7 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int jour) {
 		SDL_RenderCopy(rendu, texturejour, NULL, &pos_jour);
 		SDL_RenderPresent(rendu);
 		SDL_DestroyTexture(texturejour);
+
 
 	//Taille min
 		TTF_Init();
