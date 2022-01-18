@@ -405,8 +405,17 @@ void Recharge_Sauvegarde_Stats_Graphique(Statistique tab[], int taille) {
 }
 
 
+/*
 
-// Fonction en rapport a SDL et constantes
+	 __  __  ___   ____   __           __  __
+	/ / / / / __| | __ \ | |          / / / /
+   / / / / | (___ | |  | | |         / / / /
+  / / / /   \___ \| |  | | |        / / / /
+ / / / /    ____) | |__| | |____   / / / /
+/_/ /_/    |_____/|_____/|______| /_/ /_/
+
+
+*/
 
 const int PositionX_leaveButton = 700;
 const int PositionY_leaveButton = 500;
@@ -415,7 +424,13 @@ const int HauteurFenetre = 880;
 SDL_Rect returnmenu_button;
 SDL_Rect rectborduregauche;
 SDL_Rect rectborduredroite;
+SDL_Rect RectChoixSaveGauche;
+SDL_Rect RectChoixSaveMillieu;
+SDL_Rect RectChoixSaveDroite;
 
+bool ActivChoixDroite = false;
+bool ActivChoixMillieu = false;
+bool ActivChoixGauche = false;
 bool ActivStartMenu = false;
 
 
@@ -429,7 +444,7 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 void affiche(SDL_Renderer* rendu) {
 	ActivStartMenu = false;
 	SDL_RenderClear(rendu);
-	SDL_Rect rectarriereplan;
+	SDL_Rect rectarriereplan; //fond noir
 	rectarriereplan.w = LargeurFenetre;
 	rectarriereplan.h = HauteurFenetre;
 	rectarriereplan.y = 0;
@@ -437,7 +452,7 @@ void affiche(SDL_Renderer* rendu) {
 	SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
 	SDL_RenderFillRect(rendu, &rectarriereplan);
 
-	SDL_Rect rectfond;
+	SDL_Rect rectfond; //fond gauche affichage des bambou
 	rectfond.w = LargeurFenetre - 750;
 	rectfond.h = HauteurFenetre - 50;
 	rectfond.y = 25;
@@ -445,7 +460,7 @@ void affiche(SDL_Renderer* rendu) {
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &rectfond);
 
-	SDL_Rect rect;
+	SDL_Rect rect; //fond millieu affichage des graphiques
 	rect.w = LargeurFenetre - 1245;
 	rect.h = HauteurFenetre - 50;
 	rect.y = 25;
@@ -453,19 +468,41 @@ void affiche(SDL_Renderer* rendu) {
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &rect);
 
-	rect.w = 280;
+	rect.w = 280; //fond droite affichage des info stat button
 	rect.h = HauteurFenetre - 50;
 	rect.y = 25;
 	rect.x = LargeurFenetre - 300;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &rect);
 
-	returnmenu_button.w = 250;
+	returnmenu_button.w = 250; //Button retour au menu de choix
 	returnmenu_button.h = 50;
 	returnmenu_button.y = HauteurFenetre - 90;
 	returnmenu_button.x = LargeurFenetre - 285;
 	SDL_SetRenderDrawColor(rendu, 0, 15, 15, 255);
 	SDL_RenderFillRect(rendu, &returnmenu_button);
+
+	/*Button de choix save*/
+	int TailleCarreButton = 70;
+	RectChoixSaveGauche.w = TailleCarreButton;//Gauche
+	RectChoixSaveGauche.h = TailleCarreButton;
+	RectChoixSaveGauche.y = HauteurFenetre - 180;
+	RectChoixSaveGauche.x = LargeurFenetre - 285;
+	SDL_SetRenderDrawColor(rendu, 50, 0, 15, 255);
+	SDL_RenderFillRect(rendu, &RectChoixSaveGauche);
+	RectChoixSaveMillieu.w = TailleCarreButton;//Millieu
+	RectChoixSaveMillieu.h = TailleCarreButton;
+	RectChoixSaveMillieu.y = HauteurFenetre - 180;
+	RectChoixSaveMillieu.x = LargeurFenetre - 285 + 90;
+	SDL_SetRenderDrawColor(rendu, 50, 0, 15, 255);
+	SDL_RenderFillRect(rendu, &RectChoixSaveMillieu);
+	RectChoixSaveDroite.w = TailleCarreButton;//Droite
+	RectChoixSaveDroite.h = TailleCarreButton;
+	RectChoixSaveDroite.y = HauteurFenetre - 180;
+	RectChoixSaveDroite.x = LargeurFenetre - 285 + 90 * 2;
+	SDL_SetRenderDrawColor(rendu, 50, 0, 15, 255);
+	SDL_RenderFillRect(rendu, &RectChoixSaveDroite);
+
 
 
 	affiche_terre_bambou(rendu);
@@ -729,27 +766,61 @@ int main(int argc, char* argv[]) {
 					event.button.x<rectborduredroite.x + rectborduredroite.w &&
 					event.button.y>rectborduredroite.y &&
 					event.button.y < rectborduredroite.y + rectborduredroite.h) {
+					ActivChoixGauche = false;
+					ActivStartMenu = false;
+					ActivChoixDroite = true;
 					affiche(rendu);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-				if (event.button.button == SDL_BUTTON_LEFT) {
-					if (ActivStartMenu == true &&
-						event.button.x > rectborduregauche.x &&
-						event.button.x<rectborduregauche.x + rectborduregauche.w &&
-						event.button.y>rectborduregauche.y &&
-						event.button.y < rectborduregauche.y + rectborduregauche.h) {
-						affiche(rendu);
-						bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
-					}
-					SDL_RenderPresent(rendu);//on rafraichit
-					if (event.button.button == SDL_BUTTON_LEFT) {//si on clique bouton gauche
-						if (event.button.x > returnmenu_button.x &&
-							event.button.x<returnmenu_button.x + returnmenu_button.w &&
-							event.button.y>returnmenu_button.y &&
-							event.button.y < returnmenu_button.y + returnmenu_button.h) {
-							start_choice(rendu);
-						}
-						SDL_RenderPresent(rendu);//on rafraichit
+				if (ActivStartMenu == true &&
+					event.button.x > rectborduregauche.x &&
+					event.button.x<rectborduregauche.x + rectborduregauche.w &&
+					event.button.y>rectborduregauche.y &&
+					event.button.y < rectborduregauche.y + rectborduregauche.h) {
+					ActivChoixGauche = true;
+					ActivStartMenu = false;
+					ActivChoixDroite = true;
+					affiche(rendu);
+					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
+				}
+				SDL_RenderPresent(rendu);//on rafraichit
+				if (event.button.x > returnmenu_button.x &&
+					event.button.x<returnmenu_button.x + returnmenu_button.w &&
+					event.button.y>returnmenu_button.y &&
+					event.button.y < returnmenu_button.y + returnmenu_button.h) {
+					start_choice(rendu);
+				}
+				SDL_RenderPresent(rendu);//on rafraichit
+				if (ActivChoixGauche == true &&
+					event.button.x > RectChoixSaveGauche.x &&
+					event.button.x<RectChoixSaveGauche.x + RectChoixSaveGauche.w &&
+					event.button.y>RectChoixSaveGauche.y &&
+					event.button.y < RectChoixSaveGauche.y + RectChoixSaveGauche.h) {
+					//fonction pour button Gauche
+
+				}
+				SDL_RenderPresent(rendu);//on rafraichit
+				if (ActivChoixGauche == true &&
+					event.button.x > RectChoixSaveMillieu.x &&
+					event.button.x<RectChoixSaveMillieu.x + RectChoixSaveMillieu.w &&
+					event.button.y>RectChoixSaveMillieu.y &&
+					event.button.y < RectChoixSaveMillieu.y + RectChoixSaveMillieu.h) {
+					//fonction pour button Millieu
+
+				}
+				SDL_RenderPresent(rendu);//on rafraichit
+				if (ActivChoixGauche == true &&
+					event.button.x > RectChoixSaveDroite.x &&
+					event.button.x<RectChoixSaveDroite.x + RectChoixSaveDroite.w &&
+					event.button.y>RectChoixSaveDroite.y &&
+					event.button.y < RectChoixSaveDroite.y + RectChoixSaveDroite.h) {
+					//fonction pour button Droite
+				}
+				SDL_RenderPresent(rendu);//on rafraichit
+
+
+
+
 
 						break;
 
@@ -765,8 +836,7 @@ int main(int argc, char* argv[]) {
 
 			//fermeture
 			SDL_Quit();
-		}
-	}
+		
 
 	return 0;
 }
