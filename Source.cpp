@@ -805,9 +805,11 @@ int main(int argc, char* argv[]) {
 					event.button.x<rectborduredroite.x + rectborduredroite.w &&
 					event.button.y>rectborduredroite.y &&
 					event.button.y < rectborduredroite.y + rectborduredroite.h) {
+
 					ActivChoixGauche = false;
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
+
 					affiche(rendu);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
