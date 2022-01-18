@@ -177,10 +177,12 @@ int somme_croissance(Bambou tab[], int taille) {
 void ReduceMax(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 	int indice_premier = 0, indice_deuxieme = 0;
 	TailleMax(tab, taille, indice_premier, indice_deuxieme);
-
-	deplacement(panda1, panda2, indice_premier, indice_deuxieme);
-
+	
+	if (panda1.batterie != 0 && panda2.batterie != 0)
+		deplacement(panda1, panda2, indice_premier, indice_deuxieme);
+	
 	batterie_et_decoupe(tab, panda1, panda2, indice_premier, indice_deuxieme);
+	
 }
 
 
@@ -230,7 +232,8 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 
 
 	if (tab[indice_croissance1].taille > taille_minimale && tab[indice_croissance2].taille > taille_minimale) {
-		deplacement(panda1, panda2, indice_croissance1, indice_croissance2);
+		if (panda1.batterie != 0 && panda2.batterie != 0)
+			deplacement(panda1, panda2, indice_croissance1, indice_croissance2);
 		batterie_et_decoupe(tab, panda1, panda2, indice_croissance1, indice_croissance2);
 	}
 }
@@ -585,9 +588,8 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 	return 0;
 }
 
-void affichage_panda(SDL_Renderer* rendu, Robot& panda1, Robot& panda2, int taille) {
+void affichage_panda1(SDL_Renderer* rendu, Robot& panda1, int taille) {
 	SDL_Surface* image1 = IMG_Load("PandaGris.png");
-	SDL_Surface* image2 = IMG_Load("PandaBleu.png");
 	
 	if (!image1)
 	{
@@ -595,38 +597,52 @@ void affichage_panda(SDL_Renderer* rendu, Robot& panda1, Robot& panda2, int tail
 		return;
 	}
 
-	if (!image2) {
+	SDL_Texture* monImage1 = SDL_CreateTextureFromSurface(rendu, image1);
+	SDL_FreeSurface(image1);
+
+	SDL_Rect posImg1;
+	
+	posImg1.y = 760;
+
+	for (int i = 0; i < taille; i++) {
+		if (panda1.position[i] == true) {
+			posImg1.x = 62 * i + 65;
+			SDL_QueryTexture(monImage1, NULL, NULL, &posImg1.w, &posImg1.h);
+			SDL_RenderCopy(rendu, monImage1, NULL, &posImg1);
+		}
+	}
+	
+	SDL_RenderPresent(rendu);
+}
+
+
+void affichage_panda2(SDL_Renderer* rendu, Robot& panda1, int taille) {
+	SDL_Surface* image1 = IMG_Load("PandaBleu.png");
+
+	if (!image1)
+	{
 		cout << "Erreur de chargement de l'image : PandaBleu", SDL_GetError();
 		return;
 	}
 
 	SDL_Texture* monImage1 = SDL_CreateTextureFromSurface(rendu, image1);
-	SDL_Texture* monImage2 = SDL_CreateTextureFromSurface(rendu, image2);
 	SDL_FreeSurface(image1);
-	SDL_FreeSurface(image2);
 
 	SDL_Rect posImg1;
-	SDL_Rect posImg2;
-	
+
 	posImg1.y = 760;
-	posImg2.y = 760;
 
 	for (int i = 0; i < taille; i++) {
 		if (panda1.position[i] == true) {
-			posImg1.x = 40 * i + 95;
+			posImg1.x = 62 * i + 95;
 			SDL_QueryTexture(monImage1, NULL, NULL, &posImg1.w, &posImg1.h);
 			SDL_RenderCopy(rendu, monImage1, NULL, &posImg1);
 		}
 	}
-	for (int i = 0; i < taille; i++) {
-		if (panda2.position[i] == true) {
-			posImg1.x = 40 * i + 95;
-			SDL_QueryTexture(monImage2, NULL, NULL, &posImg2.w, &posImg2.h);
-			SDL_RenderCopy(rendu, monImage2, NULL, &posImg2);
-		}
-	}
+
 	SDL_RenderPresent(rendu);
 }
+
 
 /*
 void deplacement_panda(SDL_Renderer* rendu, Robot &panda, int taille) {
@@ -696,6 +712,8 @@ void NePasSauvegarder_EtRemove() {
 	cout << "Aucune sauvegarde et suppression des fichiers effectuee ! " << endl;
 }
 
+
+										/*---------------------- MAIN ---------------------*/
 
 
 int main(int argc, char* argv[]) {
@@ -868,17 +886,19 @@ int main(int argc, char* argv[]) {
 				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
+
 				ReduceMax(jardin, TAILLE, panda1, panda2);
 				SDL_RenderClear(rendu);
 				affiche(rendu);
+
+				affichage_panda1(rendu, panda1, TAILLE);
+				affichage_panda2(rendu, panda2, TAILLE);
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
-				affichage_panda(rendu, panda1, panda2, TAILLE);
 				croissance(jardin, TAILLE);
 
 
 				afficheTab(jardin, TAILLE);
 				afficheTab(jardin, TAILLE);
-				croissance(jardin, TAILLE);
 				cout << "Batterie panda1 : " << panda1.batterie << endl;
 				cout << "Batterie panda2 : " << panda2.batterie << endl;
 
