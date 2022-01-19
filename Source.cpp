@@ -1077,10 +1077,10 @@ int main(int argc, char* argv[]) {
 				affiche(rendu);
 
 				affichage_panda1(rendu, panda1, TAILLE);
-				affichage_panda2(rendu, panda2, TAILLE);
+				affichage_panda2(rendu, panda2, TAILLE); 
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				
-				if (compteur > 0) 
+				if (compteur > 0)
 					x2_min = x1_min, y2_min = y1_min;
 
 				placer_point_min(rendu, RecupStats, compteur, x1_min, y1_min, cpt_jour);		// A mettre
