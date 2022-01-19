@@ -459,7 +459,7 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 void affiche_rect_milieu(SDL_Renderer* rendu) {
 	SDL_Rect rect; //fond millieu affichage des graphiques
 	rect.w = LargeurFenetre - 1245;
-	rect.h = HauteurFenetre - 45;
+	rect.h = HauteurFenetre - 55;
 	rect.y = 25;
 	rect.x = 930;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
@@ -516,7 +516,7 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot& panda1
 
 	SDL_Rect rectfond; //fond gauche affichage des bambou
 	rectfond.w = LargeurFenetre - 750;
-	rectfond.h = HauteurFenetre - 50;
+	rectfond.h = HauteurFenetre - 55;
 	rectfond.y = 25;
 	rectfond.x = 25;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
@@ -532,7 +532,7 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot& panda1
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &recta);*/
 
-	SDL_Surface* image = IMG_Load("menudroite.png");
+	SDL_Surface* image = IMG_Load("menudroite1.png");
 	if (!image)
 	{
 		cout << "Erreur de chargement de l'image : %s", SDL_GetError();
@@ -1092,7 +1092,7 @@ int main(int argc, char* argv[]) {
 
 	// Déclaration tableau et constante
 	const int TAILLE = 12;
-	const int TAILLE_STATS = 1000;
+	const int TAILLE_STATS = 10000;
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
 	int cpt_jour = 0;
@@ -1368,6 +1368,7 @@ int main(int argc, char* argv[]) {
 					event.button.y>RectChoixSaveGauche.y &&
 					event.button.y < RectChoixSaveGauche.y + RectChoixSaveGauche.h) {
 					//fonction pour button Gauche
+					compteur = 0;
 					Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
@@ -1376,6 +1377,7 @@ int main(int argc, char* argv[]) {
 					event.button.x<RectChoixSaveMillieu.x + RectChoixSaveMillieu.w &&
 					event.button.y>RectChoixSaveMillieu.y &&
 					event.button.y < RectChoixSaveMillieu.y + RectChoixSaveMillieu.h) {
+					compteur = 0;
 					//fonction pour button Millieu
 					NePasSauvegarder();
 					ifstream entree("jardin.txt", ios::in);
@@ -1412,6 +1414,7 @@ int main(int argc, char* argv[]) {
 					event.button.y>RectChoixSaveDroite.y &&
 					event.button.y < RectChoixSaveDroite.y + RectChoixSaveDroite.h) {
 					//fonction pour button Droite
+					compteur = 0;
 					NePasSauvegarder_EtRemove();
 					InitTab(jardin, TAILLE);
 					InitRobot(panda1);
