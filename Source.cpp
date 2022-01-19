@@ -510,7 +510,7 @@ void afficheboutton123menu(SDL_Renderer* rendu) {
 	SDL_DestroyTexture(texturebuttonmenu);
 }
 
-void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot &panda1) {
+void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot& panda1) {
 	ActivStartMenu = false;
 
 
@@ -1151,26 +1151,10 @@ int main(int argc, char* argv[]) {
 
 			}
 
-				cout << "Entrez 's' pour sauvegarder la progression, 'n' pour fermer sans sauvegarder la progression, 'r' pour fermer sans sauvegarder la progression et supprimer les fichiers de sauvegarde" << endl;
-				cin >> choix;
-
-				if (choix == 's') {
-					Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
-				}
-				if (choix == 'n') {
-					NePasSauvegarder();
-				}
-				if (choix == 'r') {
-					NePasSauvegarder_EtRemove();
-				}
-				*/
-
-			}
-
 			else if (choix_suite == 'r') {
 
-	
-	else if (mode == 'f') {
+				InitStats(RecupStats, TAILLE_STATS, cpt_jour, jardin, TAILLE, indice_premier_plus_grand, indice_deuxieme_plus_grand);
+				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
 				croissance(jardin, TAILLE);
 				afficheTab(jardin, TAILLE);
@@ -1185,14 +1169,13 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	/*
-	else if (mode == 'f') {
 
+	else if (mode == 'f') {
 		while (simulation) {
 			cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
 			cin >> choix_suite;
 			if (choix_suite == 'q') {
-	
+				cout << "Fin." << endl;
 				simulation = false;
 			}
 			else if (choix_suite == 'r') {
@@ -1209,7 +1192,7 @@ int main(int argc, char* argv[]) {
 			cout << endl;
 		}
 	}
-	*/
+
 
 	//ouverture de la SDL
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -1316,19 +1299,7 @@ int main(int argc, char* argv[]) {
 				cache.w = LargeurFenetre;
 				cache.h = 25;
 				cache.y = 0;
-					affiche(rendu, RecupStats, cpt_jour, panda1);
-					SDL_RenderClear(rendu);
-
-					SDL_Rect rectarriereplan; //fond noir
-					rectarriereplan.w = LargeurFenetre;
-					rectarriereplan.h = HauteurFenetre;
-					rectarriereplan.y = 0;
-					rectarriereplan.x = 0;
-					SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
-					SDL_RenderFillRect(rendu, &rectarriereplan);
-					affiche(rendu, RecupStats, cpt_jour, panda1);
-					affiche_rect_milieu(rendu);						// A mettre
-					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
+				cache.x = 0;
 				SDL_SetRenderDrawColor(rendu, 0, 0, 0, 255);
 				SDL_RenderFillRect(rendu, &cache);
 			}
@@ -1345,7 +1316,19 @@ int main(int argc, char* argv[]) {
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
 
-					affiche(rendu);
+					affiche(rendu, RecupStats, cpt_jour, panda1);
+					SDL_RenderClear(rendu);
+
+					SDL_Rect rectarriereplan; //fond noir
+					rectarriereplan.w = LargeurFenetre;
+					rectarriereplan.h = HauteurFenetre;
+					rectarriereplan.y = 0;
+					rectarriereplan.x = 0;
+					SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
+					SDL_RenderFillRect(rendu, &rectarriereplan);
+					affiche(rendu, RecupStats, cpt_jour, panda1);
+					affiche_rect_milieu(rendu);						// A mettre
+					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
 				if (ActivStartMenu == true &&
@@ -1362,7 +1345,7 @@ int main(int argc, char* argv[]) {
 					SDL_Rect rectarriereplan; //fond noir
 					rectarriereplan.w = LargeurFenetre;
 					rectarriereplan.h = HauteurFenetre;
-				if (ActivStartMenu == false &&
+					rectarriereplan.y = 0;
 					rectarriereplan.x = 0;
 					SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
 					SDL_RenderFillRect(rendu, &rectarriereplan);
@@ -1371,7 +1354,7 @@ int main(int argc, char* argv[]) {
 					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-				if (ActivStartMenu == false &&
+				if (event.button.x > returnmenu_button.x &&
 					event.button.x<returnmenu_button.x + returnmenu_button.w &&
 					event.button.y>returnmenu_button.y &&
 					event.button.y < returnmenu_button.y + returnmenu_button.h) {
@@ -1379,7 +1362,7 @@ int main(int argc, char* argv[]) {
 					start_choice(rendu);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-				if (ActivChoixGauche == true &&
+				if (ActivStartMenu == false &&
 					event.button.x > RectChoixSaveGauche.x &&
 					event.button.x<RectChoixSaveGauche.x + RectChoixSaveGauche.w &&
 					event.button.y>RectChoixSaveGauche.y &&
@@ -1388,7 +1371,7 @@ int main(int argc, char* argv[]) {
 					Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-				if (ActivChoixGauche == true &&
+				if (ActivStartMenu == false &&
 					event.button.x > RectChoixSaveMillieu.x &&
 					event.button.x<RectChoixSaveMillieu.x + RectChoixSaveMillieu.w &&
 					event.button.y>RectChoixSaveMillieu.y &&
@@ -1406,7 +1389,7 @@ int main(int argc, char* argv[]) {
 							InitTab(jardin, TAILLE);
 							InitRobot(panda1);
 							InitRobot(panda2);
-				if (ActivStartMenu == false &&
+						}
 						else {
 							cout << "Erreur, il manque un fichier de sauvegarde." << endl;
 						}
@@ -1423,7 +1406,7 @@ int main(int argc, char* argv[]) {
 
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-				if (ActivChoixGauche == true &&
+				if (ActivStartMenu == false &&
 					event.button.x > RectChoixSaveDroite.x &&
 					event.button.x<RectChoixSaveDroite.x + RectChoixSaveDroite.w &&
 					event.button.y>RectChoixSaveDroite.y &&
