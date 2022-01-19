@@ -17,8 +17,7 @@ struct Statistique {
 };
 
 
-struct Bambou
-{
+struct Bambou{
 	int num;
 	int taille;
 	int croissance;
@@ -72,7 +71,7 @@ int TailleMin(Bambou tab[], int taille) {
 			imin = i;
 		}
 	}
-	return imin;
+	return tab[imin].taille; 
 }
 
 
@@ -442,10 +441,21 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 	SDL_RenderPresent(rendu);
 }
 
+void affiche_rect_milieu(SDL_Renderer* rendu) {
+	SDL_Rect rect; //fond millieu affichage des graphiques
+	rect.w = LargeurFenetre - 1245;
+	rect.h = HauteurFenetre - 50;
+	rect.y = 25;
+	rect.x = 930;
+	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
+	SDL_RenderFillRect(rendu, &rect);
+}
 
-void affiche(SDL_Renderer* rendu, Statistique tab[], int jour) {
+
+void affiche(SDL_Renderer* rendu) {
 	ActivStartMenu = false;
-	SDL_RenderClear(rendu);
+
+
 	SDL_Rect rectarriereplan; //fond noir
 	rectarriereplan.w = LargeurFenetre;
 	rectarriereplan.h = HauteurFenetre;
@@ -462,20 +472,13 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int jour) {
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &rectfond);
 
-	SDL_Rect rect; //fond millieu affichage des graphiques
-	rect.w = LargeurFenetre - 1245;
-	rect.h = HauteurFenetre - 50;
-	rect.y = 25;
-	rect.x = 930;
+	SDL_Rect recta;
+	recta.w = 280; //fond droite affichage des info stat button
+	recta.h = HauteurFenetre - 50;
+	recta.y = 25;
+	recta.x = LargeurFenetre - 300;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
-	SDL_RenderFillRect(rendu, &rect);
-
-	rect.w = 280; //fond droite affichage des info stat button
-	rect.h = HauteurFenetre - 50;
-	rect.y = 25;
-	rect.x = LargeurFenetre - 300;
-	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
-	SDL_RenderFillRect(rendu, &rect);
+	SDL_RenderFillRect(rendu, &recta);
 
 	returnmenu_button.w = 250; //Button retour au menu de choix
 	returnmenu_button.h = 50;
@@ -960,6 +963,83 @@ void NePasSauvegarder_EtRemove() {
 }
 
 
+void placer_point_min(SDL_Renderer* rendu, Statistique tab[], int& cpt, int& x, int& y, int cpt_jour) { // A changer
+
+	SDL_Rect point;
+	point.x = 950 + 14 * cpt;
+	point.y = 780 - tab[cpt_jour].TailleMin; // A changer
+
+	point.w = 3;
+	point.h = 3;
+
+	SDL_SetRenderDrawColor(rendu, 19, 51, 231, 255);
+	SDL_RenderFillRect(rendu, &point);
+	SDL_RenderPresent(rendu);
+
+	cpt = cpt % 26;
+
+	x = point.x;
+	y = point.y;
+}
+
+
+void placer_point_moy(SDL_Renderer* rendu, Statistique tab[], int& cpt, int& x, int& y, int cpt_jour) { // A changer
+
+	SDL_Rect point;
+	point.x = 950 + 14 * cpt;
+	point.y = 580 - tab[cpt_jour].TailleMoy; // A changer
+
+	point.w = 3;
+	point.h = 3;
+
+	SDL_SetRenderDrawColor(rendu, 3, 193, 17, 255);
+	SDL_RenderFillRect(rendu, &point);
+	SDL_RenderPresent(rendu);
+
+	cpt = cpt % 26;
+
+	x = point.x;
+	y = point.y;
+}
+
+
+void placer_point_max(SDL_Renderer* rendu, Statistique tab[], int& cpt, int& x, int& y, int cpt_jour) { // A changer
+
+	SDL_Rect point;
+	point.x = 950 + 14 * cpt;
+	point.y = 380 - tab[cpt_jour].val_TailleMax1; // A changer
+
+	point.w = 3;
+	point.h = 3;
+
+	SDL_SetRenderDrawColor(rendu, 240, 255, 0, 255);
+	SDL_RenderFillRect(rendu, &point);
+	SDL_RenderPresent(rendu);
+
+	cpt = cpt % 26;
+
+	x = point.x;
+	y = point.y;
+}
+
+
+void tracer_droite(SDL_Renderer* rendu, int x1, int y1, int x2, int y2) {
+
+	if (y1 > 600) {
+		SDL_SetRenderDrawColor(rendu, 19, 51, 231, 255);
+		SDL_RenderDrawLine(rendu, x1 + 1, y1 + 1, x2 + 1, y2 + 1);
+	}
+	else if (y1 <= 600 && y1 > 400) {
+		SDL_SetRenderDrawColor(rendu, 3, 193, 17, 255);
+		SDL_RenderDrawLine(rendu, x1 + 1, y1 + 1, x2 + 1, y2 + 1);
+	}
+	else {
+		SDL_SetRenderDrawColor(rendu, 240, 255, 0, 255);
+		SDL_RenderDrawLine(rendu, x1 + 1, y1 + 1, x2 + 1, y2 + 1);
+	}
+	SDL_RenderPresent(rendu);
+}
+
 
 int main(int argc, char* argv[]) {
 
@@ -1114,6 +1194,13 @@ int main(int argc, char* argv[]) {
 	SDL_RenderPresent(rendu);
 
 
+	// Coordonnes des points utiles pour tracer courbe et variable compteur;
+	int x1_min, y1_min, x2_min, y2_min;    
+	int x1_moy, y1_moy, x2_moy, y2_moy;    
+	int x1_max, y1_max, x2_max, y2_max;	   
+	int compteur = 0;
+
+
 	bool continuer = true;   //booléen fin de programme
 	SDL_Event event;//gestion des évènements souris/clavier, 
 					//SDL_Event est de type struct
@@ -1132,23 +1219,49 @@ int main(int argc, char* argv[]) {
 				afficheStats(RecupStats, cpt_jour, indice_premier_plus_grand, indice_deuxieme_plus_grand);
 
 				ReduceMax(jardin, TAILLE, panda1, panda2);
-				SDL_RenderClear(rendu);
-				affiche(rendu, RecupStats, cpt_jour);
+				affiche(rendu);
 
 				affichage_panda1(rendu, panda1, TAILLE);
 				affichage_panda2(rendu, panda2, TAILLE);
 				bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
-				croissance(jardin, TAILLE);
 
+				if (compteur > 0)
+					x2_min = x1_min, y2_min = y1_min;
+
+				placer_point_min(rendu, RecupStats, compteur, x1_min, y1_min, cpt_jour);		// A mettre
+
+				if (compteur > 0)
+					tracer_droite(rendu, x1_min, y1_min, x2_min, y2_min);
+
+				if (compteur > 0)
+					x2_moy = x1_moy, y2_moy = y1_moy;
+
+				placer_point_moy(rendu, RecupStats, compteur, x1_moy, y1_moy, cpt_jour);		// A mettre
+
+				if (compteur > 0)
+					tracer_droite(rendu, x1_moy, y1_moy, x2_moy, y2_moy);
+
+				if (compteur > 0)
+					x2_max = x1_max, y2_max = y1_max;
+
+				placer_point_max(rendu, RecupStats, compteur, x1_max, y1_max, cpt_jour);		// A mettre
+
+				if (compteur > 0)
+					tracer_droite(rendu, x1_max, y1_max, x2_max, y2_max);
+
+				if (compteur == 25) {											// A mettre
+					affiche_rect_milieu(rendu);								    // A mettre
+				}
+
+				croissance(jardin, TAILLE);
 
 				afficheTab(jardin, TAILLE);
 				afficheTab(jardin, TAILLE);
 				cout << "Batterie panda1 : " << panda1.batterie << endl;
 				cout << "Batterie panda2 : " << panda2.batterie << endl;
 
-
+				compteur++;
 				cpt_jour++;
-
 			}
 			break;
 		case SDL_MOUSEBUTTONUP://appui souris
@@ -1163,7 +1276,7 @@ int main(int argc, char* argv[]) {
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
 
-					affiche(rendu, RecupStats, cpt_jour);
+					affiche(rendu);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
 				if (ActivStartMenu == true &&
@@ -1174,7 +1287,18 @@ int main(int argc, char* argv[]) {
 					ActivChoixGauche = true;
 					ActivStartMenu = false;
 					ActivChoixDroite = true;
-					affiche(rendu, RecupStats, cpt_jour);
+					affiche(rendu);
+					SDL_RenderClear(rendu);
+
+					SDL_Rect rectarriereplan; //fond noir
+					rectarriereplan.w = LargeurFenetre;
+					rectarriereplan.h = HauteurFenetre;
+					rectarriereplan.y = 0;
+					rectarriereplan.x = 0;
+					SDL_SetRenderDrawColor(rendu, 0, 0, 0, 0);
+					SDL_RenderFillRect(rendu, &rectarriereplan);
+					affiche(rendu);									// A mettre
+					affiche_rect_milieu(rendu);						// A mettre
 					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
