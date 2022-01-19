@@ -720,7 +720,6 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot& panda1
 	SDL_RenderPresent(rendu);
 	SDL_DestroyTexture(texturejour);
 
-
 	//Init font et color des stats
 	TTF_Init();
 	TTF_Font* fonttextestat = TTF_OpenFont("C:\\Windows\\Fonts\\Calibri.TTF", 25);
