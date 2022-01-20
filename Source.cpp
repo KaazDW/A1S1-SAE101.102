@@ -455,7 +455,6 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 	SDL_RenderPresent(rendu);
 }
 
-//			Cette fonction est a ajoute
 void affiche_rect_milieu(SDL_Renderer* rendu) {
 	SDL_Rect rect; //fond millieu affichage des graphiques
 	rect.w = LargeurFenetre - 1245;
@@ -852,7 +851,7 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 
 	SDL_Rect pos_titre2;
 	pos_titre2.x = 460;
-	pos_titre2.y = 186;
+	pos_titre2.y = 184;
 	SDL_Texture* texturetitre2 = loadText(rendu, "Panda'Robot Simulator", devant, font);
 	SDL_QueryTexture(texturetitre2, NULL, NULL, &pos_titre2.w, &pos_titre2.h);
 	SDL_RenderCopy(rendu, texturetitre2, NULL, &pos_titre2);
@@ -892,24 +891,21 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 	SDL_RenderPresent(rendu);
 	SDL_DestroyTexture(texturefast);
 
+	//Affiche Shutdown Button
+	SDL_Surface* image = IMG_Load("shutdownbuttonimg.png");
+	if (!image)
+	{
+		cout << "Erreur de chargement de l'image shudownbutton", SDL_GetError();
+	}
+	SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
+	SDL_FreeSurface(image);
+	SDL_Rect posImgShutdownButton;
+	posImgShutdownButton.x = 785;
+	posImgShutdownButton.y = 670;
+	SDL_QueryTexture(monImage, NULL, NULL, &posImgShutdownButton.w, &posImgShutdownButton.h);
+	SDL_RenderCopy(rendu, monImage, NULL, &posImgShutdownButton);
 
 
-
-	/*
-		SDL_Surface* image = IMG_Load("shutdownlogo.png");
-		if (!image)
-		{
-			cout << "Erreur de chargement de l'image : %s", SDL_GetError();
-			return -1;
-		}
-		SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
-		SDL_FreeSurface(image);
-		SDL_Rect posImg;
-		posImg.x = 100;
-		posImg.y = 100;
-		SDL_QueryTexture(monImage, NULL, NULL, &posImg.w, &posImg.h);
-		SDL_RenderCopy(rendu, monImage, NULL, &posImg);
-		*/
 	SDL_RenderPresent(rendu);
 	return 0;
 }
@@ -1134,8 +1130,8 @@ int main(int argc, char* argv[]) {
 	bool simulation = true;
 	char choix_suite, mode;
 
-	cout << "Choix mode : 'f' pour Fast, 'm' pour Max." << endl;
-	cin >> mode;
+	//cout << "Choix mode : 'f' pour Fast, 'm' pour Max." << endl;
+	mode = 0;
 
 	if (mode == 'm') {
 
@@ -1171,8 +1167,8 @@ int main(int argc, char* argv[]) {
 
 	else if (mode == 'f') {
 		while (simulation) {
-			cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
-			cin >> choix_suite;
+			//cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
+			//cin >> choix_suite;
 			if (choix_suite == 'q') {
 				cout << "Fin." << endl;
 				simulation = false;
@@ -1353,7 +1349,18 @@ int main(int argc, char* argv[]) {
 					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-				if (event.button.x > returnmenu_button.x &&
+				if (ActivStartMenu == true &&
+					event.button.x > 785 &&
+					event.button.x< 785 + 100 &&
+					event.button.y> 670  &&
+					event.button.y < 670 + 100) {
+					cout << "!! LOG - SHUTDOWN button pressed !! " << endl;
+					exit(0);
+
+				}
+				SDL_RenderPresent(rendu);//on rafraichit
+				if (ActivStartMenu == false &&
+					event.button.x > returnmenu_button.x &&
 					event.button.x<returnmenu_button.x + returnmenu_button.w &&
 					event.button.y>returnmenu_button.y &&
 					event.button.y < returnmenu_button.y + returnmenu_button.h) {
