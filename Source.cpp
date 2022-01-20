@@ -227,30 +227,40 @@ void ReduceFast(Bambou tab[], int taille, Robot& panda1, Robot& panda2) {
 	int indice_max1, indice_max2;
 	int max1, max2;
 
-	max1 = -1;
-	indice_max1 = -1;
+	max1 = tab[0].croissance;
+	indice_croissance1 = 0;
 
-	max2 = -2;
-	indice_max2 = -1;
-
-	for (int i = 0; i < 12; i++) {
-		if (tab[i].taille >= max1 && tab[i].taille >= max2) {
-			max2 = max1;
-			indice_max2 = indice_max1;
-			max1 = tab[i].taille;
-			indice_max1 = i;
+	for (int i = 0; i < taille; i++) {
+		if (tab[i].taille > taille_minimale && max1 <= tab[i].croissance) {
+			max1 = tab[i].croissance;
+			indice_croissance1 = i;
 		}
-		else {
-			if (tab[i].taille >= max2 && tab[i].taille < max1) {
-				max2 = tab[i].taille;
-				indice_max2 = i;
-			}
+	}
+	if (indice_croissance1 != 0) {
+		Bambou tmp = tab[indice_croissance1];
+		tab[indice_croissance1] = tab[0];
+		tab[0] = tmp;
+	}
+
+	max2 = tab[1].croissance;
+	indice_croissance2 = 1;
+
+	for (int i = 1; i < taille; i++) {
+		if (tab[i].taille > taille_minimale && max2 <= tab[i].croissance) {
+			max2 = tab[i].croissance;
+			indice_croissance2 = i;
 		}
 	}
 
-	if (tab[indice_max1].taille > taille_minimale && tab[indice_max2].taille > taille_minimale) {
-		deplacement(panda1, panda2, indice_max1, indice_max2);
-		batterie_et_decoupe(tab, panda1, panda2, indice_max1, indice_max2);
+	if (indice_croissance1 != 0) {
+		Bambou tmp = tab[indice_croissance1];
+		tab[indice_croissance1] = tab[0];
+		tab[0] = tmp;
+	}
+
+	if (tab[indice_croissance1].taille > taille_minimale && tab[indice_croissance2].taille > taille_minimale) {
+		deplacement(panda1, panda2, indice_croissance1, indice_croissance2);
+		batterie_et_decoupe(tab, panda1, panda2, indice_croissance1, indice_croissance2);
 	}
 }
 
@@ -455,68 +465,24 @@ void affiche_terre_bambou(SDL_Renderer* rendu) {
 	SDL_RenderPresent(rendu);
 }
 
-//			Cette fonction est a ajoute
 void affiche_rect_milieu(SDL_Renderer* rendu) {
 	SDL_Rect rect; //fond millieu affichage des graphiques
 	rect.w = LargeurFenetre - 1245;
-	rect.h = HauteurFenetre - 45;
+	rect.h = HauteurFenetre - 50;
 	rect.y = 25;
 	rect.x = 930;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
 	SDL_RenderFillRect(rendu, &rect);
 }
 
-void afficheboutton123menu(SDL_Renderer* rendu) {
 
-	TTF_Init();
-	TTF_Font* fonttextestat = TTF_OpenFont("C:\\Windows\\Fonts\\Calibri.TTF", 25);
-	SDL_Color couleurtext = { 100, 100, 100 , 255 };
-
-	//Button 1
-	SDL_Rect pos_textbutton1;
-	pos_textbutton1.x = 1385;
-	pos_textbutton1.y = 725;
-	SDL_Texture* texturebutton1 = loadText(rendu, "1", couleurtext, fonttextestat);
-	SDL_QueryTexture(texturebutton1, NULL, NULL, &pos_textbutton1.w, &pos_textbutton1.h);
-	SDL_RenderCopy(rendu, texturebutton1, NULL, &pos_textbutton1);
-	SDL_RenderPresent(rendu);
-	SDL_DestroyTexture(texturebutton1);
-
-	SDL_Rect pos_textbutton2;
-	pos_textbutton2.x = 1473;
-	pos_textbutton2.y = 725;
-	SDL_Texture* texturebutton2 = loadText(rendu, "2", couleurtext, fonttextestat);
-	SDL_QueryTexture(texturebutton2, NULL, NULL, &pos_textbutton2.w, &pos_textbutton2.h);
-	SDL_RenderCopy(rendu, texturebutton2, NULL, &pos_textbutton2);
-	SDL_RenderPresent(rendu);
-	SDL_DestroyTexture(texturebutton2);
-
-	SDL_Rect pos_textbutton3;
-	pos_textbutton3.x = 1563;
-	pos_textbutton3.y = 725;
-	SDL_Texture* texturebutton3 = loadText(rendu, "3", couleurtext, fonttextestat);
-	SDL_QueryTexture(texturebutton3, NULL, NULL, &pos_textbutton3.w, &pos_textbutton3.h);
-	SDL_RenderCopy(rendu, texturebutton3, NULL, &pos_textbutton3);
-	SDL_RenderPresent(rendu);
-	SDL_DestroyTexture(texturebutton3);
-
-	SDL_Rect pos_textmenu;
-	pos_textmenu.x = 1450;
-	pos_textmenu.y = 805;
-	SDL_Texture* texturebuttonmenu = loadText(rendu, "MENU", couleurtext, fonttextestat);
-	SDL_QueryTexture(texturebuttonmenu, NULL, NULL, &pos_textmenu.w, &pos_textmenu.h);
-	SDL_RenderCopy(rendu, texturebuttonmenu, NULL, &pos_textmenu);
-	SDL_RenderPresent(rendu);
-	SDL_DestroyTexture(texturebuttonmenu);
-}
-
-void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot &panda1) {
+void affiche(SDL_Renderer* rendu) {
 	ActivStartMenu = false;
 
 
 	SDL_Rect rectfond; //fond gauche affichage des bambou
 	rectfond.w = LargeurFenetre - 750;
-	rectfond.h = HauteurFenetre - 50;
+	rectfond.h = HauteurFenetre - 55;
 	rectfond.y = 25;
 	rectfond.x = 25;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
@@ -530,9 +496,9 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot &panda1
 	recta.y = 25;
 	recta.x = LargeurFenetre - 300;
 	SDL_SetRenderDrawColor(rendu, 0, 30, 40, 255);
-	SDL_RenderFillRect(rendu, &recta);*/
+	SDL_RenderFillRect(rendu, &recta);
 
-	SDL_Surface* image = IMG_Load("menudroite.png");
+	SDL_Surface* image = IMG_Load("menudroite1.png");
 	if (!image)
 	{
 		cout << "Erreur de chargement de l'image : %s", SDL_GetError();
@@ -691,25 +657,10 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot &panda1
 	TTF_Font* fontjour = TTF_OpenFont("C:\\Windows\\Fonts\\Calibrii.TTF", 35);
 	SDL_Color rougejour = { 255, 100, 100 , 255 };
 
-	int _Jour = tab[cpt_jour].Jour;
-	char jour[256] = "";
-	_itoa_s(_Jour, jour, 10);
+	int _Jour = rand() % 10;
+	char valeur[256] = "";
+	_itoa_s(_Jour, valeur, 10);
 
-	int _Tmin = tab[cpt_jour].TailleMin;
-	char tmin[256] = "";
-	_itoa_s(_Tmin, tmin, 10);
-
-	int _Tmax = tab[cpt_jour].val_TailleMax1;
-	char tmax[256] = "";
-	_itoa_s(_Tmax, tmax, 10);
-
-	int _Tmoy = tab[cpt_jour].TailleMoy;
-	char tmoy[256] = "";
-	_itoa_s(_Tmoy, tmoy, 10);
-
-	int _Tbatterie = panda1.batterie;
-	char tbatterie[256] = "";
-	_itoa_s(_Tbatterie, tbatterie, 10);
 
 	SDL_Rect pos_jour;
 	pos_jour.x = 1433;
@@ -721,16 +672,11 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot &panda1
 	SDL_DestroyTexture(texturejour);
 
 
-	//Init font et color des stats
+	//Taille min
 	TTF_Init();
 	TTF_Font* fonttextestat = TTF_OpenFont("C:\\Windows\\Fonts\\Calibri.TTF", 25);
-	SDL_Color couleurmin = { 19, 51, 231 , 255 };
-	SDL_Color couleurmax = { 240, 255, 0 , 255 };
-	SDL_Color couleurmoy = { 3, 193, 17 , 255 };
+	SDL_Color couleurtext = { 100, 100, 100 , 255 };
 
-	SDL_Color couleurbatterie = { 100, 100, 100 , 255 };
-
-	//Taille Min
 	SDL_Rect pos_text;
 	pos_text.x = 1490;
 	pos_text.y = 120;
@@ -770,8 +716,46 @@ void affiche(SDL_Renderer* rendu, Statistique tab[], int cpt_jour, Robot &panda1
 	SDL_RenderPresent(rendu);
 	SDL_DestroyTexture(texturetextmoy);
 
+	//Button 1
+	SDL_Rect pos_textbutton1;
+	pos_textbutton1.x = 1385;
+	pos_textbutton1.y = 725;
+	SDL_Texture* texturebutton1 = loadText(rendu, "1", couleurtext, fonttextestat);
+	SDL_QueryTexture(texturebutton1, NULL, NULL, &pos_textbutton1.w, &pos_textbutton1.h);
+	SDL_RenderCopy(rendu, texturebutton1, NULL, &pos_textbutton1);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturebutton1);
+
+	SDL_Rect pos_textbutton2;
+	pos_textbutton2.x = 1473;
+	pos_textbutton2.y = 725;
+	SDL_Texture* texturebutton2 = loadText(rendu, "2", couleurtext, fonttextestat);
+	SDL_QueryTexture(texturebutton2, NULL, NULL, &pos_textbutton2.w, &pos_textbutton2.h);
+	SDL_RenderCopy(rendu, texturebutton2, NULL, &pos_textbutton2);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturebutton2);
+
+	SDL_Rect pos_textbutton3;
+	pos_textbutton3.x = 1563;
+	pos_textbutton3.y = 725;
+	SDL_Texture* texturebutton3 = loadText(rendu, "3", couleurtext, fonttextestat);
+	SDL_QueryTexture(texturebutton3, NULL, NULL, &pos_textbutton3.w, &pos_textbutton3.h);
+	SDL_RenderCopy(rendu, texturebutton3, NULL, &pos_textbutton3);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturebutton3);
+
+	SDL_Rect pos_textmenu;
+	pos_textmenu.x = 1450;
+	pos_textmenu.y = 805;
+	SDL_Texture* texturebuttonmenu = loadText(rendu, "MENU", couleurtext, fonttextestat);
+	SDL_QueryTexture(texturebuttonmenu, NULL, NULL, &pos_textmenu.w, &pos_textmenu.h);
+	SDL_RenderCopy(rendu, texturebuttonmenu, NULL, &pos_textmenu);
+	SDL_RenderPresent(rendu);
+	SDL_DestroyTexture(texturebuttonmenu);
 
 
+
+	affiche_terre_bambou(rendu);
 
 	/*
 	TTF_Init();
@@ -853,7 +837,7 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 
 	SDL_Rect pos_titre2;
 	pos_titre2.x = 460;
-	pos_titre2.y = 186;
+	pos_titre2.y = 184;
 	SDL_Texture* texturetitre2 = loadText(rendu, "Panda'Robot Simulator", devant, font);
 	SDL_QueryTexture(texturetitre2, NULL, NULL, &pos_titre2.w, &pos_titre2.h);
 	SDL_RenderCopy(rendu, texturetitre2, NULL, &pos_titre2);
@@ -893,24 +877,21 @@ int start_choice(SDL_Renderer* rendu) { /*Menu de choix*/
 	SDL_RenderPresent(rendu);
 	SDL_DestroyTexture(texturefast);
 
+	//Affiche Shutdown Button
+	SDL_Surface* image = IMG_Load("shutdownbuttonimg.png");
+	if (!image)
+	{
+		cout << "Erreur de chargement de l'image shudownbutton", SDL_GetError();
+	}
+	SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
+	SDL_FreeSurface(image);
+	SDL_Rect posImgShutdownButton;
+	posImgShutdownButton.x = 785;
+	posImgShutdownButton.y = 670;
+	SDL_QueryTexture(monImage, NULL, NULL, &posImgShutdownButton.w, &posImgShutdownButton.h);
+	SDL_RenderCopy(rendu, monImage, NULL, &posImgShutdownButton);
 
 
-
-	/*
-		SDL_Surface* image = IMG_Load("shutdownlogo.png");
-		if (!image)
-		{
-			cout << "Erreur de chargement de l'image : %s", SDL_GetError();
-			return -1;
-		}
-		SDL_Texture* monImage = SDL_CreateTextureFromSurface(rendu, image);
-		SDL_FreeSurface(image);
-		SDL_Rect posImg;
-		posImg.x = 100;
-		posImg.y = 100;
-		SDL_QueryTexture(monImage, NULL, NULL, &posImg.w, &posImg.h);
-		SDL_RenderCopy(rendu, monImage, NULL, &posImg);
-		*/
 	SDL_RenderPresent(rendu);
 	return 0;
 }
@@ -1092,7 +1073,7 @@ int main(int argc, char* argv[]) {
 
 	// Déclaration tableau et constante
 	const int TAILLE = 12;
-	const int TAILLE_STATS = 1000;
+	const int TAILLE_STATS = 10000;
 	Bambou jardin[TAILLE];
 	Statistique RecupStats[TAILLE_STATS];
 	int cpt_jour = 0;
@@ -1135,8 +1116,8 @@ int main(int argc, char* argv[]) {
 	bool simulation = true;
 	char choix_suite, mode;
 
-	cout << "Choix mode : 'f' pour Fast, 'm' pour Max." << endl;
-	cin >> mode;
+	//cout << "Choix mode : 'f' pour Fast, 'm' pour Max." << endl;
+	mode = 0;
 
 	if (mode == 'm') {
 
@@ -1172,8 +1153,8 @@ int main(int argc, char* argv[]) {
 	
 	else if (mode == 'f') {
 		while (simulation) {
-			cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
-			cin >> choix_suite;
+			//cout << "Entrez 'r' pour relancer un jour, 'q' pour quitter." << endl;
+			//cin >> choix_suite;
 			if (choix_suite == 'q') {
 				cout << "Fin." << endl;
 				simulation = false;
@@ -1354,7 +1335,18 @@ int main(int argc, char* argv[]) {
 					bambous_tracer_pour_reducemax(rendu, jardin, TAILLE);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
-				if (event.button.x > returnmenu_button.x &&
+				if (ActivStartMenu == true &&
+					event.button.x > 785 &&
+					event.button.x < 785 + 100 &&
+					event.button.y> 670 &&
+					event.button.y < 670 + 100) {
+					cout << "!! LOG - SHUTDOWN button pressed !! " << endl;
+					exit(0);
+
+				}
+				SDL_RenderPresent(rendu);//on rafraichit
+				if (ActivStartMenu == false &&
+					event.button.x > returnmenu_button.x &&
 					event.button.x<returnmenu_button.x + returnmenu_button.w &&
 					event.button.y>returnmenu_button.y &&
 					event.button.y < returnmenu_button.y + returnmenu_button.h) {
@@ -1368,6 +1360,7 @@ int main(int argc, char* argv[]) {
 					event.button.y>RectChoixSaveGauche.y &&
 					event.button.y < RectChoixSaveGauche.y + RectChoixSaveGauche.h) {
 					//fonction pour button Gauche
+					compteur = 0;
 					Sauvegarder_Progression(jardin, RecupStats, panda1, panda2, TAILLE, TAILLE_STATS, cpt_jour);
 				}
 				SDL_RenderPresent(rendu);//on rafraichit
@@ -1376,6 +1369,7 @@ int main(int argc, char* argv[]) {
 					event.button.x<RectChoixSaveMillieu.x + RectChoixSaveMillieu.w &&
 					event.button.y>RectChoixSaveMillieu.y &&
 					event.button.y < RectChoixSaveMillieu.y + RectChoixSaveMillieu.h) {
+					compteur = 0;
 					//fonction pour button Millieu
 					NePasSauvegarder();
 					ifstream entree("jardin.txt", ios::in);
@@ -1412,6 +1406,7 @@ int main(int argc, char* argv[]) {
 					event.button.y>RectChoixSaveDroite.y &&
 					event.button.y < RectChoixSaveDroite.y + RectChoixSaveDroite.h) {
 					//fonction pour button Droite
+					compteur = 0;
 					NePasSauvegarder_EtRemove();
 					InitTab(jardin, TAILLE);
 					InitRobot(panda1);
