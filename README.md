@@ -1,4 +1,4 @@
-# SAE101-102
+# SAE101-102 - PANDA PROJECT
 C++ Project for IUT LYON1 Claude Bernard - 14/01/22 to 19/01/22.
 https://codimd.math.cnrs.fr/s/MxyJStdPl#
 
